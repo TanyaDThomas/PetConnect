@@ -1,0 +1,231 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@using System
+
+@{
+    var name = User.Identity?.Name ?? "Guest";
+
+    var hour = DateTime.Now.Hour;
+
+    var greeting = hour < 12 ? "Good Morning" :
+                   hour < 18 ? "Good Afternoon" :
+                                "Good Evening";
+}
+
+<div class="container-fluid">
+
+    <h1 class="font-display">@greeting, @name  <span class="animate-wag">🐾</span> </h1>
+    <p class="text-muted-foreground"> Here's what's happening across Pet Connect today.</p>
+
+    <!-- Stats Cards -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="dashboard-card">
+
+                <div class="logo-circle bg-coral">
+                    <i class="fa-solid fa-paw"></i>
+                </div>
+
+                <div>
+                    <h6 class="card-title">Total Animals</h6>
+                    <h3 class="card-number">128</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <div class="logo-circle bg-sage">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+
+                <div>
+                    <h6 class="card-title">Adoptions</h6>
+                    <h3 class="card-number">54</h3>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <div class="logo-circle bg-amber">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+
+                <div>
+                    <h6 class="card-title">Pending</h6>
+                    <h3 class="card-number">12</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <div class="logo-circle bg-blue">
+                    <i class="fa-solid fa-dollar-sign"></i>
+                </div>
+
+                <div>
+                    <h6 class="card-title">Revenue</h6>
+                    <h3 class="card-number">$8,420</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
+<!-- Chart -->
+<div class="row g-3">
+
+    <!-- Animal Trends -->
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5 class="mb-4">
+                    Animal Trends
+                </h5>
+
+                <canvas id="animalTrendsChart"></canvas>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Animals by Species -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5 class="mb-4">
+                    Animals by Species
+                </h5>
+
+                <canvas id="speciesChart"></canvas>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<script>
+
+    //
+    // Animal Trends (Line Chart)
+    //
+
+
+
+    const trendsCtx = document.getElementById('animalTrendsChart');
+
+    new Chart(trendsCtx, {
+        type: 'line',
+
+        data: {
+            labels: [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun'
+            ],
+
+            datasets: [{
+                label: 'Animals',
+
+                data: [
+                    22,
+                    30,
+                    28,
+                    35,
+                    40,
+                    45
+                ],
+
+                borderColor: '#FF7A5A',      // coral
+                backgroundColor: '#FFE5DD',   //soft coral tint
+
+                tension: 0.4,
+                fill: true,
+                pointRadius: 4
+            }]
+        },
+
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+
+    });
+
+
+    //
+    // Animals by Species (Doughnut Chart)
+    //
+
+    const speciesCtx = document.getElementById('speciesChart');
+
+    new Chart(speciesCtx, {
+        type: 'doughnut',
+
+        data: {
+            labels: [
+                'Dogs',
+                'Cats',
+                'Birds',
+                'Other'
+            ],
+
+            datasets: [{
+                data: [
+                    45,
+                    35,
+                    10,
+                    10
+                ],
+
+                backgroundColor: [
+                    '#FF7A5A',   // coral
+                    ' #4FA89A',   // sage green
+                    '#F4B740',   // warning amber
+                    '#3A312C',   // dark gray
+                    '#E5E7EB'    // gray
+                ],
+
+                borderWidth: 0
+            }]
+        },
+
+        options: {
+            responsive: true,
+
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+
+    });
+
+</script>
+

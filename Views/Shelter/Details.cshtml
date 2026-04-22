@@ -1,0 +1,54 @@
+﻿@model PetConnect.ViewModels.ShelterViewModel
+@{
+    ViewData["Title"] = "Shelter Details";
+}
+
+
+<h2>Shelter Details</h2>
+<hr />
+
+
+<div class="row">
+    <div class="col-sm-6">
+        <h4>Basic Information</h4>
+        <hr />
+
+        <dl>
+            <dt class="col-sm-4">Id</dt>
+            <dd class="col-sm-8">@Model.Id</dd>
+
+            <dt class="col-sm-4">Name</dt>
+            <dd class="col-sm-8">@Model.Name</dd>
+
+            <dt class="col-sm-4">Address </dt>
+            <dd class="col-sm-8">@Model.Address</dd>
+
+            <dt class="col-sm-4">City</dt>
+            <dd class="col-sm-8">@Model.City</dd>
+
+            <dt class="col-sm-4">State</dt>
+            <dd class="col-sm-8">@Model.State</dd>
+
+            <dt class="col-sm-4">Postal Code</dt>
+            <dd class="col-sm-8">@Model.PostalCode</dd>
+
+             <dt class="col-sm-4">Phone Number</dt>
+            <dd class="col-sm-8">@Model.PhoneNumber</dd>
+
+            <dt class="col-sm-4">Email</dt>
+            <dd class="col-sm-8">@Model.Email</dd>
+
+            <dt class="col-sm-4">Status</dt>
+            <dd class="col-sm-8">@(Model.IsActive ? "Active" : "Inactive")</dd>
+
+        </dl>
+    </div>
+
+</div>
+
+
+<div class="mt-3">
+    <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-warning">Update</a>
+
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

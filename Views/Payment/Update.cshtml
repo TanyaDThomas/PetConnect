@@ -1,0 +1,119 @@
+﻿@model PetConnect.Domain.Entities.Payment
+
+@{
+    ViewData["Title"] = "Update Payment";
+}
+
+
+<h2>Update a Payment</h2>
+
+<hr />
+
+<form asp-action="Update" method="post">
+
+    <!-- Amount -->
+    <div class="mb-3">
+        <label asp-for="Amount" class="form-label"></label>
+        <input asp-for="Amount" class="form-control" />
+        <span asp-validation-for="Amount" class="text-danger"></span>
+    </div>
+
+    <!-- Payment Type -->
+    <div class="mb-3">
+        <label asp-for="Type" class="form-label"></label>
+        <select asp-for="Type" class="form-select" id="paymentType">
+            <option value="">-- Select Payment Type --</option>
+            <option value="Cash">Cash</option>
+            <option value="Card">Card</option>
+            <option value="PayPal">PayPal</option>
+            <option value="Check">Check</option>
+        </select>
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+    <!-- Adopter -->
+    <div class="mb-3">
+        <label asp-for="AdopterId" class="form-label"></label>
+        <input asp-for="AdopterId" class="form-control" />
+        <span asp-validation-for="AdopterId" class="text-danger"></span>
+    </div>
+
+    <!-- Adoption (optional) -->
+    <div class="mb-3">
+        <label asp-for="AdoptionId" class="form-label"></label>
+        <input asp-for="AdoptionId" class="form-control" />
+        <span asp-validation-for="AdoptionId" class="text-danger"></span>
+    </div>
+
+    <!-- CASH FIELDS -->
+    <div id="cardFields" style="display:none;">
+        <h5>Card Details</h5>
+
+        <div class="mb-3">
+            <label asp-for="FirstName" class="form-label"></label>
+            <input asp-for="FirstName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="LastName" class="form-label"></label>
+            <input asp-for="LastName" class="form-control" />
+        </div>
+
+    </div>
+
+    <!-- CARD FIELDS -->
+    <div id="cardFields" style="display:none;">
+        <h5>Card Details</h5>
+
+        <div class="mb-3">
+            <label asp-for="FirstName" class="form-label"></label>
+            <input asp-for="FirstName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="LastName" class="form-label"></label>
+            <input asp-for="LastName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="LastFourDigits" class="form-label"></label>
+            <input asp-for="LastFourDigits" class="form-control" maxlength="4" />
+        </div>
+    </div>
+
+    <!-- PAYPAL FIELDS -->
+    <div id="paypalFields" style="display:none;">
+        <h5>PayPal Details</h5>
+
+        <div class="mb-3">
+            <label asp-for="PaypalEmail" class="form-label"></label>
+            <input asp-for="PaypalEmail" class="form-control" />
+        </div>
+    </div>
+
+    <!-- CHECK FIELDS -->
+    <div id="checkFields" style="display:none;">
+        <h5>Check Details</h5>
+
+        <div class="mb-3">
+            <label asp-for="BankName" class="form-label"></label>
+            <input asp-for="BankName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="CheckNumber" class="form-label"></label>
+            <input asp-for="CheckNumber" class="form-control" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Create Payment
+    </button>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

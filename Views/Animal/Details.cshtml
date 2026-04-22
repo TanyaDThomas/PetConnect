@@ -1,0 +1,72 @@
+﻿@model PetConnect.ViewModels.AnimalViewModel
+@{
+    ViewData["Title"] = "Animal Details";
+}
+
+
+<h2>@Model.Name Details</h2>
+<hr />
+
+
+<div class="row">
+    <div class="col-sm-6">
+        <h4>Basic Information</h4>
+        <hr />
+
+        <dl>
+
+            <dt class="col-sm-4">Full Name</dt>
+            <dd class="col-sm-8">@Model.Name</dd>
+
+            <dt class="col-sm-4">Animal Type</dt>
+            <dd class="col-sm-8">@Model.AnimalTypeName</dd>
+
+            <dt class="col-sm-4">Age</dt>
+            <dd class="col-sm-8">@Model.Age</dd>
+
+            <dt class="col-sm-4">Breed</dt>
+            <dd class="col-sm-8">@Model.Breed</dd>
+
+            <dt class="col-sm-4">Postal Color</dt>
+            <dd class="col-sm-8">@Model.Color</dd>
+
+            <dt class="col-sm-4">Adoption Fee</dt>
+            <dd class="col-sm-8">@Model.AdoptionFee</dd>
+
+            <dt class="col-sm-4">Status</dt>
+            <dd class="col-sm-8">@(Model.IsAdopted ? "Adopted" : "Available")</dd>
+
+            <dt class="col-sm-5">IsActive</dt>
+            <dd class="col-sm-7">@(Model.IsActive ? "Yes" : "No")</dd>
+
+            <dt class="col-sm-4">Shelter</dt>
+            <dd class="col-sm-8">@Model.ShelterName</dd>
+
+        </dl>
+    </div>
+
+    <div class="col-md-6">
+        <h4>Health Information</h4>
+        <hr />
+
+        <dl class="row">
+            <dt class="col-sm-5">Vaccinated</dt>
+            <dd class="col-sm-7">@(Model.IsVaccinated ? "Yes" : "No")</dd>
+
+            <dt class="col-sm-5">Special Care Needs</dt>
+            <dd class="col-sm-7">@(Model.HasSpecialCareNeeds ? "Yes" : "No")</dd>
+
+            <dt class="col-sm-5">Has Special Diet</dt>
+            <dd class="col-sm-7">@(Model.HasSpecialDiet ? "Yes" : "No")</dd>
+
+        </dl>
+    </div>
+
+</div>
+
+
+<div class="mt-3">
+    <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-warning">Update</a>
+
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

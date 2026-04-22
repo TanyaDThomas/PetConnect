@@ -1,0 +1,37 @@
+﻿@model IEnumerable<PetConnect.Domain.Entities.AnimalType>
+
+@{
+    ViewData["Title"] = "List of Animal Types";
+}
+
+<h2>Choice of Animal Types</h2>
+<hr />
+
+<p><a asp-action="Create" class="btn btn-primary">Create a New Animal Type </a></p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Animal Type</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var animalType in Model)
+        {
+            <tr>
+                <td>@animalType.Name</td>
+                <td>
+                    <form asp-action="Delete" asp-controller="AnimalType"
+                        asp-route-id="@animalType.Id"
+                        method ="post"
+                        style-display="inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot></tfoot>
+</table>

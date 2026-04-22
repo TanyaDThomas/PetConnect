@@ -1,0 +1,111 @@
+﻿@model PetConnect.ViewModels.AdopterViewModel
+
+@{
+    ViewData["Title"] = "Edit Adopter";
+}
+
+<h2>Edit @Model.FullName</h2>
+<hr />
+
+<form asp-action="Update">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="ShelterId" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <h4>Basic Information</h4>
+    <hr />
+
+
+    <div class="row mb-3">
+        <div class="col-sm-6">
+            <label asp-for="FirstName" class="form-label"></label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+
+        <div class="col-md-6">
+            <label asp-for="LastName" class="form-label"></label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Address" class="form-label"></label>
+            <input asp-for="Address" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="City" class="form-label"></label>
+            <input asp-for="City" class="form-control" />
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="State" class="form-label"></label>
+            <input asp-for="State" class="form-control" />
+            <span asp-validation-for="State" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="PostalCode" class="form-label"></label>
+            <input asp-for="PostalCode" class="form-control" />
+            <span asp-validation-for="PostalCode" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="PhoneNumber" class="form-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" type="tel" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" type="email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
+
+    <h4>Household Information</h4>
+    <hr>
+
+    <div class="row mb-3">
+
+        <div class="col-md-3">
+            <div class="form-check">
+                <input asp-for="HasOtherPets" class="form-check-input" />
+                <label asp-for="HasOtherPets" class="form-check-label"></label>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-check">
+                <input asp-for="HasChildren" class="form-check-input" />
+                <label asp-for="HasChildren" class="form-check-label"></label>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-check">
+                <input asp-for="HasYard" class="form-check-input" />
+                <label asp-for="HasYard" class="form-check-label"></label>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+
+
+</form>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

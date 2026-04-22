@@ -1,0 +1,64 @@
+﻿@model PetConnect.ViewModels.AdoptionViewModel
+
+@{
+    ViewData["Title"] = "Update an Adoption";
+}
+
+<h2>Update an Adoption</h2>
+<hr />
+
+<form asp-action="Update">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="row mb-3">
+
+        <div class="col-sm-4">
+            <label asp-for="ShelterId"></label>
+            <select asp-for="ShelterId" asp-items="Model.Shelters" class="form-control">
+                <option value="">-- Select Shelter --</option>
+            </select>
+            <span asp-validation-for="ShelterId" class="text-danger"></span>
+        </div>
+
+        <div class="col-sm-4">
+            <label asp-for="AdopterId"></label>
+            <select asp-for="AdopterId" asp-items="Model.Adopters" class="form-control">
+                <option value="">-- Select Adopter --</option>
+            </select>
+            <span asp-validation-for="AdopterId" class="text-danger"></span>
+        </div>
+
+        <div class="col-sm-4">
+            <label asp-for="AnimalId"></label>
+            <select asp-for="AnimalId" asp-items="Model.Animals" class="form-control">
+                <option value="">-- Select Animal --</option>
+            </select>
+            <span asp-validation-for="AnimalId" class="text-danger"></span>
+        </div>
+
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-sm-4">
+            <label asp-for="AdoptionFee"></label>
+            <input asp-for="AdoptionFee" class="form-control" />
+            <span asp-validation-for="AdoptionFee" class="text-danger"></span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+
