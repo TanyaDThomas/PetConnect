@@ -3,10 +3,23 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
-
-appsettings.json
 appsettings.Development.json
+appsettings.Local.json
+secrets.json
+.tools
 
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Test results
+TestResults/
+
+# Coverage
+coverage/
 
 # User-specific files
 *.rsuser
