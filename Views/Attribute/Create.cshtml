@@ -1,0 +1,45 @@
+﻿@model PetConnect.Domain.Entities.AttributeDefinition
+@using PetConnect.Domain.Enums
+
+@{
+    ViewData["Title"] = "Create a New Animal Attribute";
+}
+
+<h2>Create a New Animal Attribute</h2>
+<hr />
+
+<form asp-action="Create">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+
+    <div class="row mb-3">
+   
+        <div class="col-sm-6">
+            <label asp-for="DataType" class="form-label"></label>
+
+            <select asp-for="DataType"
+                    asp-items="Html.GetEnumSelectList<AttributeDataType>()"
+                    class="form-select">
+                <option value="">-- Select Data Type --</option>
+            </select>
+
+            <span asp-validation-for="DataType" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+

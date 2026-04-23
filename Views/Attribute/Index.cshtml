@@ -1,0 +1,52 @@
+﻿@model IEnumerable<PetConnect.Domain.Entities.AttributeDefinition>
+
+@{
+    ViewData["Title"] = "List of Attributes";
+}
+
+<h2>List of Attributes</h2>
+<hr />
+
+<p><a asp-action="Create" class="btn btn-primary"></a></p>
+
+<div class="table-container">
+    <table class="table table-hover custom-table align-middle">
+        <thead>
+            <tr>
+                <th>Attribute</th>
+                
+              
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var attributeDef in Model)
+            {
+                <tr>
+                
+                    <td>@attributeDef.Name</td>
+
+                    <td>
+                        <a asp-for="Update" asp-controller="AttributeDefinition"
+                            asp-route-id="@attributeDef.Id"
+                            class="btn btn-sm btn-warning">Update</a>
+
+                        <form asp-action="Deactivate" asp-controller="Adopter"
+                              asp-route-id="@attributeDef.Id"
+                              method="post"
+                              style="display:inline">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                Remove
+                            </button>
+                        </form>
+                  
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot></tfoot>
+    </table>
+</div>

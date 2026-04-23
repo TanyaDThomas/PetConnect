@@ -2,9 +2,10 @@
 {
     public enum AttributeDataType
     {
-        Text,
-        Number,
-        Boolean,
+        String,
+        Int,
+        Decimal,
+        Bool,
         Date
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetConnect.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using PetConnect.Infrastructure.Persistence;
 namespace PetConnect.Migrations
 {
     [DbContext(typeof(PetConnectDbContext))]
-    partial class PetConnectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260423235724_AddAnimalTypeDef")]
+    partial class AddAnimalTypeDef
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
