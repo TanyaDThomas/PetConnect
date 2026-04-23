@@ -21,12 +21,20 @@ namespace PetConnect.Application.Services
         {
             try
             {
-                var adoption = await _context.Adoptions.FirstOrDefaultAsync(a => a.Id == viewModel.AdoptionId);
-                if (adoption == null) return false;
+                Adoption? adoption = null;
+
+                if (viewModel.AdoptionId.HasValue)
+                {
+                    adoption = await _context.Adoptions.FirstOrDefaultAsync(a => a.Id == viewModel.AdoptionId.Value);
+
+                    if (adoption == null) return false;
+                }
 
                 var payment = new Payment()
                 {
-                    Amount = adoption.AdoptionFee,
+                    Amount = adoption != null
+                        ? adoption.AdoptionFee
+                        : viewModel.Amount,
                     Type = viewModel.Type,
                     AdopterId = viewModel.AdopterId,
                     AdoptionId = viewModel.AdoptionId,

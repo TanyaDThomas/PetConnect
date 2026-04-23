@@ -26,11 +26,11 @@
         </div>
     }
 
-    <!-- Amount (read-only so user can't change adoption fee) -->
+    <!-- Amount -->
     <div class="mb-3">
         <label asp-for="Amount" class="form-label"></label>
-        <input asp-for="Amount" class="form-control" readonly />
-       
+        <input asp-for="Amount" class="form-control" />
+        <span asp-validation-for="Amount" class="text-danger"></span>
     </div>
 
     <!-- Payment Type -->
@@ -45,11 +45,11 @@
     </div>
 
     <!-- Adopter (optional display only or hidden later via Identity) -->
-    <div class="mb-3">
+    @* <div class="mb-3">
         <label asp-for="AdopterId" class="form-label"></label>
         <input asp-for="AdopterId" class="form-control" />
         <span asp-validation-for="AdopterId" class="text-danger"></span>
-    </div>
+    </div> *@
 
     <!-- CASH / CARD -->
     <div class="mb-3">
