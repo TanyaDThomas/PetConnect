@@ -1,4 +1,4 @@
-﻿@model PetConnect.Domain.Entities.Payment
+﻿@model PetConnect.ViewModels.PaymentViewModel
 
 @{
     ViewData["Title"] = "Update Payment";
@@ -9,7 +9,13 @@
 
 <hr />
 
-<form asp-action="Update" method="post">
+<form asp-controller="Payment"
+      asp-action="Update"
+      method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+  
+    <div asp-validation-summary="All" class="text-danger"></div>
 
     <!-- Amount -->
     <div class="mb-3">
@@ -106,10 +112,10 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">
-        Create Payment
-    </button>
-
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Update Payment</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
 </form>
 
 @section Scripts {

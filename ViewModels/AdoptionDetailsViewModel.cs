@@ -15,6 +15,6 @@ namespace PetConnect.ViewModels
         public DateTime AdoptionDate { get; set; }
         public AdoptionStatus Status { get; set; }
 
-
+        public PaymentStatus? PaymentStatus { get; set; }
     }
 }

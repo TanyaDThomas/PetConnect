@@ -1,11 +1,12 @@
 ﻿using PetConnect.Domain.Entities;
+using PetConnect.ViewModels;
 
 namespace PetConnect.Domain.Contracts
 {
     public interface IPaymentService
     {
-        Task<Payment> CreateAsync(Payment payment);
-        Task<bool> UpdateAsync(Payment payment);
+        Task<bool> CreateAsync(PaymentViewModel viewModel);
+        Task<bool> UpdateAsync(PaymentViewModel viewModel);
         Task<bool> DeactivateAsync(int id);
     }
 }

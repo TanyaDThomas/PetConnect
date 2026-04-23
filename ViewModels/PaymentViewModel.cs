@@ -4,15 +4,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PetConnect.ViewModels
 {
-    public class PaymentCreateViewModel
+    public class PaymentViewModel
     {
-      
+            
+            public int Id { get; set; }
             public decimal Amount { get; set; }
 
             public PaymentType Type { get; set; }
 
             public int? AdopterId { get; set; }
             public int? AdoptionId { get; set; }
+
 
             // Card
             public string? FirstName { get; set; }

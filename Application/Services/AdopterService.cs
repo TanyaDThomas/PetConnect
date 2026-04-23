@@ -1,7 +1,4 @@
 ﻿
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
 using PetConnect.Infrastructure.Persistence;

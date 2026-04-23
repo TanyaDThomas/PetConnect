@@ -85,47 +85,49 @@
 
     <div class="table-container">
         <table class="table table-hover custom-table align-middle">
-    <thead>
-        <tr>
-            <th>Amount</th>
-            <th>Payment Date</th>
-            <th>Payment Method</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var payment in Model)
-        {
-            <tr>
+            <thead>
+                <tr>
+                    <th>Amount</th>
+                    <th>Payment Date</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var payment in Model)
+                {
+                    <tr>
                 
-                <td>@payment.Amount </td>
-                <td>@payment.PaymentDate</td>
-                <td>@payment.PaymentMethod</td>
-                <td>@payment.Status</td>
-                <td>
-                    <a asp-action="Details" asp-controller="Payment"
-                       asp-route-id="@payment.Id"
-                       class="btn btn-sm btn-info">Details</a>
+                        <td>@payment.Amount </td>
+                        <td>@payment.PaymentDate</td>
+                        <td>@payment.PaymentMethod</td>
+                        <td>@payment.Status</td>
+                        <td class="d-flex gap-2">
+                            <a asp-action="Details" asp-controller="Payment"
+                               asp-route-id="@payment.Id"
+                               class="btn btn-sm btn-info">Details</a>
 
-                    <a asp-action="Edit" asp-controller="Payment"
-                       asp-route-id="@payment.Id"
-                       class="btn btn-sm btn-warning">Update</a>
+                            <a asp-action="Update" asp-controller="Payment"
+                               asp-route-id="@payment.Id"
+                               class="btn btn-sm btn-warning">Update</a>
 
-                    <form asp-action="Deactivate" asp-controller="Payment"
-                          asp-route-id="@payment.Id">
-                        <button type="submit" class="btn btn-sm btn-danger">Remove</button>
-                    </form>
+        
+
+                            <form asp-action="Deactivate" asp-controller="Payment"
+                                  asp-route-id="@payment.Id">
+                                <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                            </form>
                   
-                </td>
-            </tr>
-        }
-    </tbody>
-    <tfoot></tfoot>
-</table>
-</<div>
-
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot></tfoot>
+        </table>
+    </div>
 </div>
+
 
 <nav aria-label="Page navigation">
     <ul class="pagination justify-content-center mt-3">
