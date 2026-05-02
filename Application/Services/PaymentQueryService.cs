@@ -62,14 +62,24 @@ namespace PetConnect.Application.Services
             if (payment == null)
                 return null;
 
+            var notes = await _context.Notes
+                .AsNoTracking()
+                .Where(n => n.EntityType == NoteEntityType.Payment
+                         && n.EntityId == id)
+                .OrderByDescending(n => n.CreatedOn)
+                .Take(5)
+                .ToListAsync();
+
             return new PaymentDetailsViewModel
             {
                 Id = payment.Id,
                 Amount = payment.Amount,
-                Status = payment.Status.ToString(),
-                Type = payment.Type.ToString(),
-                PaymentDate = payment.PaymentDate.ToString("yyyy-MM-dd"),
-                AdoptionId = payment.AdoptionId
+                Status = payment.Status,
+                Type = payment.Type,
+                PaymentDate = payment.PaymentDate,
+                AdoptionId = payment.AdoptionId,
+                RecentNotes = notes
+
             };
         }
 

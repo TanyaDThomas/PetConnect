@@ -1,0 +1,41 @@
+﻿@model PetConnect.ViewModels.NoteDetailsViewModel
+@{
+    ViewData["Title"] = "Note Details";
+}
+<h2>Note Details</h2>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">Entity</dt>
+            <dd class="col-sm-8">@Model.EntityDisplayName (@Model.EntityType)</dd>
+            <dt class="col-sm-4">Category</dt>
+            <dd class="col-sm-8">@Model.Category</dd>
+            <dt class="col-sm-4">Internal</dt>
+            <dd class="col-sm-8">@(Model.IsInternal ? "Yes" : "No")</dd>
+            <dt class="col-sm-4">Created On</dt>
+            <dd class="col-sm-8">@Model.CreatedOn.ToShortDateString()</dd>
+            <dt class="col-sm-4">Created By</dt>
+            <dd class="col-sm-8">@Model.CreatedBy</dd>
+            @if (Model.UpdatedOn.HasValue)
+            {
+                <dt class="col-sm-4">Updated On</dt>
+                <dd class="col-sm-8">@Model.UpdatedOn.Value.ToShortDateString()</dd>
+                <dt class="col-sm-4">Updated By</dt>
+                <dd class="col-sm-8">@Model.UpdatedBy</dd>
+            }
+        </dl>
+    </div>
+    <div class="col-md-8">
+        <h5>Note Content</h5>
+        <div class="card">
+            <div class="card-body">
+                @Model.Content
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt-3">
+    <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-warning">Update</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>  

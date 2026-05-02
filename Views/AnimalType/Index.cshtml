@@ -4,26 +4,33 @@
     ViewData["Title"] = "List of Animal Types";
 }
 
-<h2>Choice of Animal Types</h2>
+<h2>View Animal Attributes</h2>
 <hr />
 
-<p><a asp-action="Create" class="btn btn-primary">Create a New Animal Type </a></p>
+
 
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Animal Type</th>
+            <th>Attributes</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach(var animalType in Model)
+        @foreach(var animalAttribute in Model)
         {
             <tr>
-                <td>@animalType.Name</td>
-                <td>
+                <td>@animalAttribute.Name</td>
+                <td class="d-flex gap-2">
+                    <a asp-action="ViewAttributes"
+                           asp-route-Id="@animalAttribute.Id"
+                           class="btn btn-sm btn-secondary">
+                        Manage Attributes
+                    </a>
+
                     <form asp-action="Delete" asp-controller="AnimalType"
-                        asp-route-id="@animalType.Id"
+                        asp-route-id="@animalAttribute.Id"
                         method ="post"
                         style-display="inline">
                         @Html.AntiForgeryToken()

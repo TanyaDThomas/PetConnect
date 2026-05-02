@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using PetConnect.Domain.Entities;
+using PetConnect.ViewModels;
 
 namespace PetConnect.Domain.Contracts
 {
@@ -7,5 +8,8 @@ namespace PetConnect.Domain.Contracts
     {
         Task<IEnumerable<AnimalType>> GetAllAsync();
         Task<IEnumerable<SelectListItem>> GetSelectListItemsAsync();
+
+        Task<ManageAnimalTypeAttributesVM?> BuildManageAttributesModelAsync(int animalTypeId);
+
     }
 }

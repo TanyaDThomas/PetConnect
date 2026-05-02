@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
+using PetConnect.Domain.Enums;
 using PetConnect.Infrastructure.Persistence;
 using PetConnect.ViewModels;
 
@@ -45,6 +46,14 @@ namespace PetConnect.Application.Services
 
             if (adopter == null) return null;
 
+            var notes = await _context.Notes
+                .AsNoTracking()
+                .Where(n => n.EntityType == NoteEntityType.Adopter
+                         && n.EntityId == id)
+                .OrderByDescending(n => n.CreatedOn)
+                .Take(5)
+                .ToListAsync();
+
             return new AdopterViewModel
             {
                 Id = adopter.Id,
@@ -60,8 +69,10 @@ namespace PetConnect.Application.Services
                 HasOtherPets = adopter.HasOtherPets,
                 HasYard = adopter.HasYard,
                 ShelterId = adopter.ShelterId,
+                RecentNotes = notes,
 
-                
+
+
                 ShelterName = adopter.Shelter?.Name ?? ""
             };
         }

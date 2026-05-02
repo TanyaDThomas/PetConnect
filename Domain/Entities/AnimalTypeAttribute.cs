@@ -11,5 +11,7 @@
         public AttributeDefinition AttributeDefinition { get; set; } = null!;
 
         public bool IsRequired { get; set; } = false;
+
+
     }
 }

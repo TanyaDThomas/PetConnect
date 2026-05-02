@@ -1,4 +1,5 @@
-﻿using PetConnect.Domain.Enums;
+﻿using PetConnect.Domain.Entities;
+using PetConnect.Domain.Enums;
 
 namespace PetConnect.ViewModels
 {
@@ -16,5 +17,11 @@ namespace PetConnect.ViewModels
         public AdoptionStatus Status { get; set; }
 
         public PaymentStatus? PaymentStatus { get; set; }
+
+        //Notes
+   
+        public IEnumerable<Note> RecentNotes { get; set; } = new List<Note>();
+        public string? ReturnUrl { get; set; }
+        public NoteEntityType EntityType { get; set; } = NoteEntityType.Adoption;
     }
 }

@@ -5,6 +5,7 @@ using PetConnect.Domain.Entities;
 using PetConnect.Domain.Enums;
 using PetConnect.Infrastructure.Persistence;
 using PetConnect.ViewModels;
+using static Azure.Core.HttpHeader;
 
 namespace PetConnect.Application.Services
 {
@@ -84,6 +85,14 @@ namespace PetConnect.Application.Services
                 .FirstOrDefaultAsync(a => a.Id == id);
             if (adoption == null) return null;
 
+            var notes = await _context.Notes
+                .AsNoTracking()
+                .Where(n => n.EntityType == NoteEntityType.Adoption
+                         && n.EntityId == id)
+                .OrderByDescending(n => n.CreatedOn)
+                .Take(5)
+                .ToListAsync();
+
             return new AdoptionDetailsViewModel
             {
                 Id = adoption.Id,
@@ -92,9 +101,12 @@ namespace PetConnect.Application.Services
                 AnimalName = adoption.Animal?.Name ?? "",
                 AdoptionFee = adoption.AdoptionFee,
                 AdoptionDate = adoption.AdoptionDate,
-                Status = adoption.Status
+                Status = adoption.Status,
+                RecentNotes = notes
             };
  
         }
+
+       
     }
 }

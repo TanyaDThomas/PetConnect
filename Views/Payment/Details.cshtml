@@ -1,48 +1,126 @@
 ﻿@model PetConnect.ViewModels.PaymentDetailsViewModel
+
 @{
     ViewData["Title"] = "Payment Details";
 }
 
-
 <h2>Payment Details</h2>
-<hr />
 
+<table class="table table-bordered">
+    <tr>
+        <th>Amount</th>
+        <td>@Model.Amount.ToString("C")</td>
+    </tr>
+    <tr>
+        <th>Status</th>
+        <td>@Model.Status</td>
+    </tr>
+    <tr>
+        <th>Type</th>
+        <td>@Model.Type</td>
+    </tr>
+    <tr>
+        <th>Payment Date</th>
+        <td>@Model.PaymentDate.ToString("g")</td>
+    </tr>
+    <tr>
+        <th>Adoption ID</th>
+        <td>@Model.AdoptionId</td>
+    </tr>
+    <tr>
+        <th>Adopter ID</th>
+        <td>@Model.AdopterId</td>
+    </tr>
+    <tr>
+        <th>Donor / Payer</th>
+        <td>@(string.IsNullOrEmpty(Model.FirstName) ? "N/A" : $"{Model.FirstName} {Model.LastName}")</td>
+    </tr>
+    <tr>
+        <th>Card / Payment Info</th>
+        <td>
+            @if (!string.IsNullOrEmpty(Model.LastFourDigits))
+            {
+                <span>Card ending @Model.LastFourDigits</span>
+            }
+            else if (!string.IsNullOrEmpty(Model.CheckNumber))
+            {
+                <span>Check #@Model.CheckNumber</span>
+            }
+            else if (!string.IsNullOrEmpty(Model.PaypalEmail))
+            {
+                <span>PayPal: @Model.PaypalEmail</span>
+            }
+            else
+            {
+                <span>Cash / Other</span>
+            }
+        </td>
+    </tr>
+    <tr>
+        <th>Receipt Number</th>
+        <td>@Model.ReceiptNumber</td>
+    </tr>
+    <tr>
+        <th>Notes</th>
+        <td>@Model.Notes</td>
+    </tr>
+    <tr>
+        <th>Failure Reason</th>
+        <td>@Model.FailureReason</td>
+    </tr>
+</table>
 
-<div class="row">
-    <div class="col-sm-6">
-        <h4>Basic Information</h4>
-        <hr />
-
-        <dl>
-
-            <dt class="col-sm-4">Amount
-            <dd class="col-sm-8">@Model.Amount</dd>
-
-            <dt class="col-sm-4">Payment Method </dt>
-            <dd class="col-sm-8">@Model.Type</dd>
-
-            <dt class="col-sm-4">Payment Date</dt>
-            <dd class="col-sm-8">@Model.PaymentDate</dd>
-
-            <dt class="col-sm-4">Animal Status</dt>
-            <dd class="col-sm-8">@Model.Status</dd>
-
-                <dt class="col-sm-4">Adoption Id</dt>
-                <dd class="col-sm-8">@Model.AdoptionId</dd>
-
-        
-        </dl>
-    </div>
-
-    
-
-</div>
-
+@* BUTTONS *@
 
 <div class="mt-3">
     <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-warning">Update</a>
 
     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>
+
+
+
+@* NOTES *@
+
+<div class="mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <h4>Recent Notes</h4>
+        <div>
+            <a asp-action="Create" asp-controller="Note"
+               asp-route-entityType="@Model.EntityType"
+               asp-route-entityId="@Model.Id"
+               class="btn btn-sm btn-primary">Add Note</a>
+
+            <a asp-action="Index" asp-controller="Note"
+               asp-route-entityType="@Model.EntityType"
+               asp-route-entityId="@Model.Id"
+               class="btn btn-sm btn-secondary ms-2">View All Notes</a>
+        </div>
+    </div>
+    <hr />
+
+    @if (Model.RecentNotes.Any())
+    {
+        @foreach (var note in Model.RecentNotes)
+        {
+            <div class="card mb-2">
+                <div class="card-body">
+                    <strong>@note.Category</strong>
+                    <span class="text-muted float-end">@note.CreatedOn.ToShortDateString()</span>
+                    <p class="mb-0 mt-1">@note.Content</p>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-muted">No notes for this adoption yet.</p>
+    }
+</div>
+
+
+
+<hr />
+
 
 

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PetConnect.Domain.Entities;
+using PetConnect.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.Numerics;
 
 namespace PetConnect.ViewModels
@@ -39,5 +41,12 @@ namespace PetConnect.ViewModels
 
         public bool IsActive { get; set; }
 
+
+        //Notes
+        public IEnumerable<Note> RecentNotes { get; set; } = new List<Note>();
+        public string? ReturnUrl { get; set; }
+        public NoteEntityType EntityType { get; set; } = NoteEntityType.Shelter;
+
     }
+
 }

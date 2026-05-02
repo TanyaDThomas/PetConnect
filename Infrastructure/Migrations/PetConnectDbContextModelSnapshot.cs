@@ -279,7 +279,7 @@ namespace PetConnect.Migrations
 
                     b.HasIndex("AttributeDefinitionId");
 
-                    b.ToTable("AnimalTypeAttribute");
+                    b.ToTable("AnimalTypeAttributes");
                 });
 
             modelBuilder.Entity("PetConnect.Domain.Entities.AttributeDefinition", b =>

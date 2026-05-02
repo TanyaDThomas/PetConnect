@@ -1,0 +1,33 @@
+﻿@model PetConnect.ViewModels.ManageAnimalTypeAttributesVM
+
+<h3>Attributes for @Model.AnimalTypeName</h3>
+
+<hr />
+
+@if (Model.Attributes.Any(a => a.IsSelected))
+{
+    <ul class="list-group">
+        @foreach (var attr in Model.Attributes.Where(a => a.IsSelected))
+        {
+            <li class="list-group-item">
+                @attr.Name
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p class="text-muted">No attributes assigned to this animal type.</p>
+}
+
+<div class="mt-3">
+    <a asp-action="ManageAttributes"
+           asp-route-id="@Model.AnimalTypeId"
+           class="btn btn-warning">
+        Edit Attributes
+    </a>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Back
+    </a>
+</div>

@@ -19,12 +19,14 @@ namespace PetConnect.Controllers
             _shelterQueryService = shelterQueryService;
             _animalTypeQueryService = animalTypeQueryService;
         }
-     
-        public async Task<IActionResult> Index()
+
+    
+        public async Task<IActionResult> Index(AnimalSearchFilter filter)
         {
-            var viewModel = await _queryService.GetAnimalListAsync();
+            var viewModel = await _queryService.GetAnimalListAsync(filter);
             return View(viewModel);
         }
+        
 
         //GET Details Animal
         public async Task<IActionResult> Details(int id)

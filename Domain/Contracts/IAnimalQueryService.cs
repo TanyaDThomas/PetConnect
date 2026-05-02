@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using PetConnect.Application.Services;
 using PetConnect.Domain.Entities;
 using PetConnect.ViewModels;
 
@@ -8,7 +9,9 @@ namespace PetConnect.Domain.Contracts
     {
         Task<IEnumerable<Animal>> GetAllAsync();
         Task<Animal?> GetByIdAsync(int id);
-        Task<IEnumerable<AnimalListViewModel>> GetAnimalListAsync();
+
+        Task<AnimalIndexViewModel> GetAnimalListAsync(AnimalSearchFilter filter);
+        Task<List<AnimalType>> GetAnimalTypesAsync();
         Task<AnimalViewModel?> GetAnimalDetailsAsync(int id);
 
         Task<AnimalViewModel?> GetAnimalUpdateAsync(int id);

@@ -44,10 +44,26 @@ namespace PetConnect.Application.Services
                 _context.Animals.Add(animal);
                 var rowsAffected = await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Animal created with Id {AnimalId}",
-                    animal.Id);
+                var attributeDefinitions = await _context.AnimalTypeAttributes
+                 .Where(at => at.AnimalTypeId == animal.AnimalTypeId)
+                 .Select(at => at.AttributeDefinition)
+                 .ToListAsync();
 
-                return rowsAffected > 0;
+                var animalAttributes = attributeDefinitions.Select(at =>
+                    new AnimalAttribute
+                    {
+                        AnimalId = animal.Id,
+                        AttributeDefinitionId = at.Id,
+                        Value = null,
+                        IsActive = true
+                    }).ToList();
+
+                _context.AnimalAttributes.AddRange(animalAttributes);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Animal created with Id {AnimalId}", animal.Id);
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -56,44 +72,64 @@ namespace PetConnect.Application.Services
             }
         }
 
+
+
         public async Task<bool> UpdateAsync(AnimalViewModel viewModel)
         {
             try
             {
-                var animal = new Animal
-                {
-                    Id = viewModel.Id,
-                    ShelterId = viewModel.ShelterId,
-                    AnimalTypeId = viewModel.AnimalTypeId,
-                    Name = viewModel.Name,
-                    DateOfBirth = viewModel.DateOfBirth,
-                    Breed = viewModel.Breed,
-                    Color = viewModel.Color,
-                    AdoptionFee = viewModel.AdoptionFee,
-                    IsVaccinated = viewModel.IsVaccinated,
-                    HasSpecialCareNeeds = viewModel.HasSpecialCareNeeds,
-                    HasSpecialDiet = viewModel.HasSpecialDiet,
-                    IsActive = viewModel.IsActive,
-                    IsAdopted = viewModel.IsAdopted
-                };
+                var animal = await _context.Animals
+                    .FirstOrDefaultAsync(a => a.Id == viewModel.Id);
+
+                if (animal == null)
+                    return false;
+
+                // update scalar fields ONLY
+                animal.ShelterId = viewModel.ShelterId;
+                animal.AnimalTypeId = viewModel.AnimalTypeId;
+                animal.Name = viewModel.Name;
+                animal.DateOfBirth = viewModel.DateOfBirth;
+                animal.Breed = viewModel.Breed;
+                animal.Color = viewModel.Color;
+                animal.AdoptionFee = viewModel.AdoptionFee;
+                animal.IsVaccinated = viewModel.IsVaccinated;
+                animal.HasSpecialCareNeeds = viewModel.HasSpecialCareNeeds;
+                animal.HasSpecialDiet = viewModel.HasSpecialDiet;
+                animal.IsAdopted = viewModel.IsAdopted;
 
                 animal.UpdatedOn = DateTime.UtcNow;
                 animal.UpdatedBy = "System";
 
-                _context.Animals.Update(animal);
-                var rowsAffected = await _context.SaveChangesAsync();
+                // ATTRIBUTES HANDLING (safe reset + rebuild)
+                var existingAttributes = await _context.AnimalAttributes
+                    .Where(a => a.AnimalId == viewModel.Id)
+                    .ToListAsync();
 
-                _logger.LogInformation("Animal updated with Id {AnimalId}",
-                    animal.Id);
+                _context.AnimalAttributes.RemoveRange(existingAttributes);
 
-                return rowsAffected > 0;
+                var newAttributes = viewModel.Attributes
+                    .Where(a => !string.IsNullOrWhiteSpace(a.Value))
+                    .Select(a => new AnimalAttribute
+                    {
+                        AnimalId = viewModel.Id,
+                        AttributeDefinitionId = a.AttributeDefinitionId,
+                        Value = a.Value
+                    });
+
+                await _context.AnimalAttributes.AddRangeAsync(newAttributes);
+
+                await _context.SaveChangesAsync();
+
+                return true;
             }
-            catch (Exception ex)
+            catch
             {
-                _logger.LogError(ex, "Operation Failed. Animal not updated.");
                 return false;
             }
         }
+
+    
+
 
         public async Task<bool> DeactivateAsync(int id)
         {

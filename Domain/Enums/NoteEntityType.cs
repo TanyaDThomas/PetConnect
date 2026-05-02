@@ -4,8 +4,9 @@
     {
         Animal,
         Adopter,
+        Adoption,
         Payment,
-        Warning,
+        //Warning,
         Shelter
     }
 }

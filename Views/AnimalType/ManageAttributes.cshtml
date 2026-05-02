@@ -1,0 +1,33 @@
+﻿@model PetConnect.ViewModels.ManageAnimalTypeAttributesVM
+
+<h2>
+    Manage Attributes for @Model.AnimalTypeName
+</h2>
+
+<form asp-action="ManageAttributes" method="post">
+
+    <input type="hidden" asp-for="AnimalTypeId" />
+    <input type="hidden" asp-for="AnimalTypeName" />
+
+    @for (int i = 0; i < Model.Attributes.Count; i++)
+    {
+        <div class="form-check">
+
+            <input type="hidden"
+                   asp-for="Attributes[i].AttributeDefinitionId" />
+
+            <input asp-for="Attributes[i].IsSelected"
+                   class="form-check-input" />
+
+            <label class="form-check-label">
+                @Model.Attributes[i].Name
+            </label>
+
+        </div>
+    }
+
+    <button class="btn btn-primary">
+        Save
+    </button>
+
+</form>

@@ -1,0 +1,114 @@
+﻿@model IEnumerable<PetConnect.ViewModels.NoteListViewModel>
+
+    @{
+        ViewData["Title"] = "List of Notes";
+    }
+
+    <h2>List of Notes</h2>
+    <hr />
+
+    
+<div class="container">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-5">
+        <div>
+            <h1 class="header-title">Notes</h1>
+            <p class="text-muted mb-0">6 of 6 Notes shown</p>
+        </div>
+        <a asp-action="Create" class="btn btn-add d-flex align-items-center gap-2">
+            <i class="fas fa-plus"></i>
+            Add a Note
+        </a>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+
+        <!-- Search Bar -->
+        <div class="card-body pb-4">
+            <div class="row g-3 align-items-center">
+                <div class="col-lg-9">
+                    <div class="position-relative">
+                        <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-4 text-muted"></i>
+                        <input type="text"
+                               class="form-control search-input ps-5"
+                               placeholder="Search by name, email, ID or location...">
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <button class="btn btn-outline-secondary w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 py-2">
+                        <i class="fas fa-sliders"></i>
+                        More filters
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Species Filter -->
+        <div class="card-body pt-0">
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <span class="filter-label">Status:</span>
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="pill-btn species-all active">All</button>
+                    <button class="pill-btn btn-light text-dark">Active</button>
+                    <button class="pill-btn btn-light text-dark">Pending Review</button>
+                    <button class="pill-btn btn-light text-dark">Flagged</button>
+                    <button class="pill-btn btn-light text-dark">Inactive</button>
+                </div>
+
+                
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<hr />
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Entity Name</th>
+            <th>Entity Type</th>
+            <th>Category</th>
+            <th>Content Preview</th>
+            <th>Created On</th>
+         
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var note in Model)
+        {
+            <tr>
+                <td>@note.EntityDisplayName</td>
+                <td>@note.EntityType</td>
+                <td>@note.Category</td>
+                <td>@note.ContentPreview</td>
+                <td>@note.CreatedOn</td>
+               
+                <td class="d-flex gap-2">
+                    <a asp-action="Details" asp-controller="Note"
+                       asp-route-id="@note.Id"
+                       class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="Update" asp-controller="Note"
+                       asp-route-id="@note.Id"
+                       class="btn btn-sm btn-warning">Update</a>
+                    <form asp-action="Deactivate" asp-controller="Note" asp-route-id="@note.Id" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                    </form>
+
+                </td>
+            </tr>
+        }
+
+    </tbody>
+    <tfoot></tfoot>
+</table>
+
+

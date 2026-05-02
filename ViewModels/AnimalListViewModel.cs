@@ -1,4 +1,5 @@
-﻿using PetConnect.Domain.Entities;
+﻿using PetConnect.Application.Services;
+using PetConnect.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace PetConnect.ViewModels
@@ -11,6 +12,8 @@ namespace PetConnect.ViewModels
         public string Breed { get; set; } = "";
         public bool IsAdopted { get; set; }
         public string ShelterName { get; set; } = "";
+
+       
 
     }
 }

@@ -29,6 +29,14 @@ builder.Services.AddScoped<IAnimalService, AnimalService>();
 builder.Services.AddScoped<IAnimalTypeQueryService, AnimalTypeQueryServce>();
 builder.Services.AddScoped<IAnimalTypeService, AnimalTypeService>();
 
+//AnimalAttribute
+builder.Services.AddScoped<IAttributeDefinitionQueryService, AttributeDefinitionQueryService>();
+builder.Services.AddScoped<IAttributeDefinitionService, AttributeDefinitionService>();
+
+//Note
+builder.Services.AddScoped<INoteQueryService, NoteQueryService>();
+builder.Services.AddScoped<INoteService, NoteService>();
+
 //Payment
 builder.Services.AddScoped<IPaymentQueryService, PaymentQueryService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
@@ -37,9 +45,7 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IShelterQueryService, ShelterQueryService>();
 builder.Services.AddScoped<IShelterService, ShelterService>();
 
-//Warning
-builder.Services.AddScoped<IWarningQueryService, WarningQueryService>();
-builder.Services.AddScoped<IWarningService, WarningService>();
+
 
 var app = builder.Build();
 

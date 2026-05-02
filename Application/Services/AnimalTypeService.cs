@@ -2,6 +2,7 @@
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
 using PetConnect.Infrastructure.Persistence;
+using PetConnect.ViewModels;
 
 namespace PetConnect.Application.Services
 {
@@ -30,6 +31,41 @@ namespace PetConnect.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Operation Failed. AnimalType not created");
+                return false;
+            }
+        }
+
+        //UPDATE MANAGE ATTRIBUTE 
+        public async Task<bool> UpdateAttributesAsync(ManageAnimalTypeAttributesVM viewModel)
+        {
+            try
+            {
+                var existingAttribute = _context.AnimalTypeAttributes.Where(at => at.AnimalTypeId == viewModel.AnimalTypeId);
+
+                _context.AnimalTypeAttributes.RemoveRange(existingAttribute);
+
+                var selected = viewModel.Attributes
+                   .Where(a => a.IsSelected)
+                   .Select(a => new AnimalTypeAttribute
+                   {
+                       AnimalTypeId = viewModel.AnimalTypeId,
+                       AttributeDefinitionId = a.AttributeDefinitionId
+                   })
+                   .ToList();
+
+                await _context.AnimalTypeAttributes.AddRangeAsync(selected);
+                var rowsAffected = await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Animal Type Attributes updated with Id {AnimalTypeId}",
+                   viewModel.AnimalTypeId);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,"Failed to update attributes for AnimalType {AnimalTypeId}",
+                    viewModel.AnimalTypeId);
+
                 return false;
             }
         }

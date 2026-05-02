@@ -16,11 +16,12 @@ namespace PetConnect.Infrastructure.Persistence
         public DbSet<AnimalAttribute> AnimalAttributes { get; set; }
 
         public DbSet<AnimalType> AnimalTypes { get; set; }
+        public DbSet<AnimalTypeAttribute> AnimalTypeAttributes { get; set; }
         public DbSet<AttributeDefinition> AttributeDefinitions { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Shelter> Shelters { get; set; }
-        public DbSet<Warning> Warnings { get; set; }
+        //public DbSet<Warning> Warnings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,11 +47,14 @@ namespace PetConnect.Infrastructure.Persistence
             modelBuilder.Entity<AnimalAttribute>()
                 .HasKey(x => new { x.AnimalId, x.AttributeDefinitionId });
 
+            modelBuilder.Entity<AnimalTypeAttribute>()
+                .HasKey(x => x.Id);
+
             modelBuilder.Entity<Note>()
                 .HasIndex(x => new { x.EntityType, x.EntityId });
 
-            modelBuilder.Entity<Warning>()
-                .HasIndex(x => new { x.EntityType, x.EntityId });
+            //modelBuilder.Entity<Warning>()
+            //    .HasIndex(x => new { x.EntityType, x.EntityId });
 
 
             modelBuilder.Entity<Adoption>()

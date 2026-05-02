@@ -1,0 +1,51 @@
+﻿@model PetConnect.ViewModels.NoteUpdateViewModel
+
+@{
+    ViewData["Title"] = "Edit Note";
+}
+
+<h2>Update a Note</h2>
+<hr />
+
+<form asp-action="Update" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row mb-3">
+
+        <div class="col-sm-6">
+            <label asp-for="Category" class="form-label">Select Category</label>
+            <select asp-for="Category" asp-items="Model.CategoryOptions" class="form-control">
+                <option value="">--Select Category--</option>
+            </select>
+            <span asp-validation-for="Category" class="text-danger"></span>
+        </div>
+
+        <div class="col-sm-6">
+            <label asp-for="Content" class="form-label">Message</label>
+            <textarea asp-for="Content" class="form-control" rows="5"></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group form-check">
+                <input asp-for="IsInternal" type="checkbox" class="form-check-input" />
+                <label asp-for="IsInternal" class="form-label">Internal</label>
+                <span asp-validation-for="IsInternal" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using PetConnect.Domain.Entities;
+using PetConnect.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace PetConnect.ViewModels
@@ -54,5 +55,12 @@ namespace PetConnect.ViewModels
         public bool HasOtherPets { get; set; }
         public bool HasChildren { get; set; }
         public bool HasYard { get; set; }
+
+
+
+        // Notes
+        public IEnumerable<Note> RecentNotes { get; set; } = new List<Note>();
+        public string? ReturnUrl { get; set; }
+        public NoteEntityType EntityType { get; set; } = NoteEntityType.Adopter;
     }
 }

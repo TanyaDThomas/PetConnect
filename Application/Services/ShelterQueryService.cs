@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
+using PetConnect.Domain.Enums;
 using PetConnect.Infrastructure.Persistence;
 using PetConnect.ViewModels;
 
@@ -68,6 +69,14 @@ namespace PetConnect.Application.Services
             var shelter = await _context.Shelters.FirstOrDefaultAsync(s => s.Id == id);
             if (shelter == null) return null;
 
+            var notes = await _context.Notes
+                .AsNoTracking()
+                .Where(n => n.EntityType == NoteEntityType.Shelter
+                         && n.EntityId == id)
+                .OrderByDescending(n => n.CreatedOn)
+                .Take(5)
+                .ToListAsync();
+
             return new ShelterViewModel
             {
                 Id = shelter.Id,
@@ -78,7 +87,8 @@ namespace PetConnect.Application.Services
                 PostalCode = shelter.PostalCode,
                 PhoneNumber= shelter.PhoneNumber,
                 Email = shelter.Email,
-                IsActive = shelter.IsActive
+                IsActive = shelter.IsActive,
+                RecentNotes = notes
             };
                
         }

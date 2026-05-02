@@ -7,7 +7,7 @@
 <h2>Create a New Animal Type</h2>
 <hr />
 
-<form asp-action="Create">
+<form asp-action="Create" method="post">
     @Html.AntiForgeryToken()
     <div asp-validation-summary="All" class="text-danger"></div>
 
