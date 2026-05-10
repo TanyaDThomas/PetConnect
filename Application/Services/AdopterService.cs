@@ -16,7 +16,7 @@ namespace PetConnect.Application.Services
             _logger = logger;
         }
 
-        public async Task<bool> CreateAsync(AdopterViewModel viewModel)
+        public async Task<bool> CreateAsync(AdopterViewModel viewModel, string userId)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace PetConnect.Application.Services
                 };
 
                 adopter.CreatedOn = DateTime.UtcNow;
-                adopter.CreatedBy = "System";
+                adopter.CreatedBy = userId;
                 adopter.IsActive = true;
 
                 _context.Adopters.Add(adopter);
@@ -62,7 +62,7 @@ namespace PetConnect.Application.Services
 
         
    
-        public async Task<bool> UpdateAsync(AdopterViewModel viewModel)
+        public async Task<bool> UpdateAsync(AdopterViewModel viewModel, string userId)
         {
             try
             {
@@ -88,9 +88,9 @@ namespace PetConnect.Application.Services
                 
 
                 adopter.UpdatedOn = DateTime.UtcNow;
-                adopter.UpdatedBy = "System";
+                adopter.UpdatedBy = userId;
 
-                
+
                 var rowsAffected = await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Adopter updated with Id {AdopterId}",
@@ -106,7 +106,7 @@ namespace PetConnect.Application.Services
        
         }
 
-        public async Task<bool> DeactivateAsync(int id)
+        public async Task<bool> DeactivateAsync(int id, string userId)
         {
             try
             {
@@ -114,7 +114,7 @@ namespace PetConnect.Application.Services
                 if (adopter == null) return false;
 
                 adopter.UpdatedOn = DateTime.UtcNow;
-                adopter.UpdatedBy = "System";
+                adopter.UpdatedBy = userId;
 
                 adopter.IsActive = false;
                 var rowsAffected = await _context.SaveChangesAsync();

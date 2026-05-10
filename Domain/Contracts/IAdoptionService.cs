@@ -5,8 +5,8 @@ namespace PetConnect.Domain.Contracts
 {
     public interface IAdoptionService
     {
-        Task<bool> CreateAsync(AdoptionViewModel viewModel);
-        Task<bool> UpdateAsync(AdoptionViewModel viewModel);
-        Task<bool> DeactivateAsync(int id);
+        Task<bool> CreateAsync(AdoptionViewModel viewModel, string userName);
+        Task<bool> UpdateAsync(AdoptionViewModel viewModel, string userName);
+        Task<bool> DeactivateAsync(int id, string userName);
     }
 }

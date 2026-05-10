@@ -1,23 +1,30 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
+using PetConnect.Infrastructure.Identity;
 using PetConnect.ViewModels;
 
 namespace PetConnect.Controllers
 {
+    [Authorize]
     public class AdopterController : Controller
     {
         private readonly IAdopterQueryService _queryService;
         private readonly IAdopterService _adopterService;
         private readonly IShelterQueryService _shelterQueryService;
-        
-        public AdopterController(IAdopterQueryService queryService, IAdopterService adopterService, IShelterQueryService shelterQueryService)
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IShelterAuthorizationService _auth;
+
+        public AdopterController(IAdopterQueryService queryService, IAdopterService adopterService, IShelterQueryService shelterQueryService, UserManager<AppUser> userManager, IShelterAuthorizationService auth)
         {
             _queryService = queryService;
             _adopterService = adopterService;
             _shelterQueryService = shelterQueryService;
-         
+            _userManager = userManager;
+            _auth = auth;
         }
         public async Task<IActionResult> Index()
         {
@@ -58,7 +65,12 @@ namespace PetConnect.Controllers
                 return View(viewModel);
             }
 
-            var success = await _adopterService.CreateAsync(viewModel);
+            var userId = _userManager.GetUserId(User);
+
+            if (userId == null) return Unauthorized();
+            
+
+            var success = await _adopterService.CreateAsync(viewModel, userId);
             if(!success) return NotFound();
 
             return RedirectToAction(nameof(Index));
@@ -86,8 +98,10 @@ namespace PetConnect.Controllers
                 return View(viewModel);
             }
 
-      
-            var success = await _adopterService.UpdateAsync(viewModel);
+            var userId = _userManager.GetUserId(User);
+            if(userId == null) return Unauthorized();
+
+            var success = await _adopterService.UpdateAsync(viewModel, userId);
             if (!success) return NotFound();
 
             return RedirectToAction(nameof(Index));
@@ -98,7 +112,10 @@ namespace PetConnect.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Deactivate(int id)
         {
-            var success = await _adopterService.DeactivateAsync(id);
+            var userId = _userManager.GetUserId(User);
+            if (userId == null) return Unauthorized();
+
+            var success = await _adopterService.DeactivateAsync(id, userId);
             if (!success) return NotFound();
             return RedirectToAction(nameof(Index));
         }

@@ -16,7 +16,7 @@ namespace PetConnect.Application.Services
             _context = context;
             _logger = logger;
         }
-        public async Task<bool> CreateAsync(AdoptionViewModel viewModel)
+        public async Task<bool> CreateAsync(AdoptionViewModel viewModel, string userId)
         {
            try
             {
@@ -34,7 +34,7 @@ namespace PetConnect.Application.Services
                 };
 
                 adoption.CreatedOn = DateTime.UtcNow;
-                adoption.CreatedBy = "Sytem";
+                adoption.CreatedBy = userId;
 
                 _context.Adoptions.Add(adoption);
                 var rowsAffected = await _context.SaveChangesAsync();
@@ -52,7 +52,7 @@ namespace PetConnect.Application.Services
             }
         }
 
-        public async Task<bool> UpdateAsync(AdoptionViewModel viewModel)
+        public async Task<bool> UpdateAsync(AdoptionViewModel viewModel, string userId)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace PetConnect.Application.Services
                 adoption.AdoptionFee = viewModel.AdoptionFee;
 
                 adoption.UpdatedOn = DateTime.UtcNow;
-                adoption.UpdatedBy = "System";
+                adoption.UpdatedBy = userId;
 
                 _context.Adoptions.Update(adoption);
                 var rowsAffected = await _context.SaveChangesAsync();
@@ -83,7 +83,7 @@ namespace PetConnect.Application.Services
                 return false;
             }
         }
-        public async Task<bool> DeactivateAsync(int id)
+        public async Task<bool> DeactivateAsync(int id, string userId)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace PetConnect.Application.Services
                 if (adoption == null) return false;
 
                 adoption.UpdatedOn = DateTime.UtcNow;
-                adoption.UpdatedBy= "System";
+                adoption.UpdatedBy= userId;
 
                 adoption.IsActive = false;
                 var rowsAffected = await _context.SaveChangesAsync();

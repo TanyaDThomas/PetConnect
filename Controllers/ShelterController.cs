@@ -1,18 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
+using PetConnect.Infrastructure.Identity;
 using PetConnect.ViewModels;
 
 namespace PetConnect.Controllers
 {
+   [Authorize]
     public class ShelterController : Controller
     {
         private readonly IShelterQueryService _queryService;
         private readonly IShelterService _shelterService;
-        public ShelterController(IShelterQueryService queryService, IShelterService shelterService)
+        private readonly UserManager<AppUser> _userManager;
+        public ShelterController(IShelterQueryService queryService, IShelterService shelterService, UserManager<AppUser> userManager)
         {
             _queryService = queryService;
             _shelterService = shelterService;
+            _userManager = userManager;
         }
         public async Task<IActionResult> Index()
         {
@@ -41,7 +47,10 @@ namespace PetConnect.Controllers
         {
             if(ModelState.IsValid)
             {
-                await _shelterService.CreateAsync(viewModel);
+                var userId = _userManager.GetUserId(User);
+                if (userId == null) return Unauthorized();
+
+                await _shelterService.CreateAsync(viewModel, userId);
                 return RedirectToAction(nameof(Index));
             }
             return View(viewModel);
@@ -62,7 +71,10 @@ namespace PetConnect.Controllers
         {
             if(ModelState.IsValid)
             {
-                await _shelterService.UpdateAsync(viewModel);
+                var userId = _userManager.GetUserId(User);
+                if(userId == null) return Unauthorized();
+
+                await _shelterService.UpdateAsync(viewModel, userId);
                 return RedirectToAction(nameof(Index));
             }
             return View(viewModel);
@@ -73,7 +85,10 @@ namespace PetConnect.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Deactivate(int id)
         {
-            var success = await _shelterService.DeactivateAsync(id);
+            var userId = _userManager.GetUserId(User);
+            if(userId ==null) return Unauthorized();
+
+            var success = await _shelterService.DeactivateAsync(id, userId);
             if (!success) return NotFound();
 
             return RedirectToAction(nameof(Index));

@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PetConnect.Domain.Entities;
+using PetConnect.Infrastructure.Identity;
 
 namespace PetConnect.Infrastructure.Persistence
 {
-    public class PetConnectDbContext : DbContext
+    public class PetConnectDbContext : IdentityDbContext<AppUser>
     {
         public PetConnectDbContext(DbContextOptions<PetConnectDbContext> options) 
             : base(options)
@@ -21,7 +24,7 @@ namespace PetConnect.Infrastructure.Persistence
         public DbSet<Note> Notes { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Shelter> Shelters { get; set; }
-        //public DbSet<Warning> Warnings { get; set; }
+        public DbSet<UserShelter> UserShelters { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -53,8 +56,8 @@ namespace PetConnect.Infrastructure.Persistence
             modelBuilder.Entity<Note>()
                 .HasIndex(x => new { x.EntityType, x.EntityId });
 
-            //modelBuilder.Entity<Warning>()
-            //    .HasIndex(x => new { x.EntityType, x.EntityId });
+            modelBuilder.Entity<UserShelter>()
+                .HasKey(us => new { us.UserId, us.ShelterId });
 
 
             modelBuilder.Entity<Adoption>()
@@ -87,6 +90,16 @@ namespace PetConnect.Infrastructure.Persistence
                 .WithMany()
                 .HasForeignKey(p => p.AdopterId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserShelter>()
+                .HasOne(us => us.User)
+                .WithMany(u => u.UserShelters)
+                .HasForeignKey(us => us.UserId);
+
+            modelBuilder.Entity<UserShelter>()
+                .HasOne(us => us.Shelter)
+                .WithMany(s => s.UserShelters)
+                .HasForeignKey(us => us.ShelterId);
         }
 
        

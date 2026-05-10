@@ -15,7 +15,7 @@ namespace PetConnect.Application.Services
             _context = context;
             _logger = logger;
         }
-        public async Task<bool> CreateAsync(ShelterViewModel viewModel)
+        public async Task<bool> CreateAsync(ShelterViewModel viewModel, string userId)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace PetConnect.Application.Services
                 };
 
                 shelter.CreatedOn = DateTime.UtcNow;
-                shelter.CreatedBy = "System";
+                shelter.CreatedBy = userId;
                 shelter.IsActive = true;
 
                 _context.Shelters.Add(shelter);
@@ -49,7 +49,7 @@ namespace PetConnect.Application.Services
             }
         }
 
-        public async Task<bool> UpdateAsync(ShelterViewModel viewModel)
+        public async Task<bool> UpdateAsync(ShelterViewModel viewModel, string userId)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace PetConnect.Application.Services
                 shelter.Email = viewModel.Email;
 
                 shelter.UpdatedOn = DateTime.UtcNow;
-                shelter.UpdatedBy = "System";
+                shelter.UpdatedBy = userId;
 
                 _context.Shelters.Update(shelter);
                 var rowsAffected = await _context.SaveChangesAsync();
@@ -83,7 +83,7 @@ namespace PetConnect.Application.Services
             }
         }
 
-        public async Task<bool> DeactivateAsync(int id)
+        public async Task<bool> DeactivateAsync(int id, string userId)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace PetConnect.Application.Services
                 if (shelter == null) return false;
 
                 shelter.UpdatedOn = DateTime.UtcNow;
-                shelter.UpdatedBy = "System";
+                shelter.UpdatedBy = userId;
 
                 shelter.IsActive = false;
                 var rowsAffected = await _context.SaveChangesAsync();

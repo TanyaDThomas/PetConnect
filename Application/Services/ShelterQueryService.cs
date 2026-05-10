@@ -43,7 +43,7 @@ namespace PetConnect.Application.Services
 
 
         //GET INDEX SHELTER
-        public async Task<IEnumerable<ShelterListViewModel>> GetShelterListAsync()
+        public async Task<List<ShelterListViewModel>> GetShelterListAsync()
         {
             var shelters = await _context.Shelters
                     .AsNoTracking()
@@ -114,6 +114,30 @@ namespace PetConnect.Application.Services
             };
         }
 
+        /*////////////////
+        //// IDENITY ////
+        //////////////*/
+
+        // GET Create dropdown for all Shelters for Admin
+        public async Task<List<Shelter>> GetSheltersForDropdownAsync()
+        {
+            return await _context.Shelters
+               .AsNoTracking()
+               .Where(s => s.IsActive)
+               .ToListAsync();
+        }
+
+
+        //GET Create for Shelters for Managers Dropdown
+        public async Task<List<Shelter>> GetSheltersForManagerAsync(string userId)
+        {
+            return await _context.UserShelters
+                .Where(us => us.UserId == userId)
+                .Select(us => us.Shelter)
+                .Distinct()
+                .ToListAsync();
+
+        }
 
     }
 }

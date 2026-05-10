@@ -7,7 +7,7 @@
 <h2>Update an Adoption</h2>
 <hr />
 
-<form asp-action="Update">
+<form asp-action="Update" method="post">
     @Html.AntiForgeryToken()
 
     <input type="hidden" asp-for="Id" />

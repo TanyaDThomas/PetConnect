@@ -6,8 +6,10 @@ using PetConnect.Infrastructure.Persistence;
 using PetConnect.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace PetConnect.Application.Services
 {
+   
     public class PaymentService : IPaymentService
     {
         private readonly PetConnectDbContext _context;
@@ -17,7 +19,7 @@ namespace PetConnect.Application.Services
             _context = context;
             _logger = logger;
         }
-        public async Task<bool> CreateAsync(PaymentViewModel viewModel)
+        public async Task<bool> CreateAsync(PaymentViewModel viewModel, string userId)
         {
             try
             {
@@ -82,7 +84,7 @@ namespace PetConnect.Application.Services
               
 
                 payment.CreatedOn= DateTime.UtcNow;
-                payment.CreatedBy = "System";
+                payment.CreatedBy = userId;
 
                 _context.Payments.Add(payment);
                 var rowsAffected = await _context.SaveChangesAsync();
@@ -100,7 +102,7 @@ namespace PetConnect.Application.Services
             }
         }
 
-        public async Task<bool> UpdateAsync(PaymentViewModel viewModel)
+        public async Task<bool> UpdateAsync(PaymentViewModel viewModel, string userId)
         {
             try
             {
@@ -118,10 +120,14 @@ namespace PetConnect.Application.Services
                 payment.BankName = viewModel.BankName;
                     payment.CheckNumber = viewModel.CheckNumber;
 
+                payment.UpdatedOn = DateTime.UtcNow;
+                payment.UpdatedBy = userId;
+
+
                 _context.Payments.Update(payment);
                 var rowsAffected = await _context.SaveChangesAsync();
 
-                _logger.LogWarning("POST UPDATE Id = {Id}", viewModel.Id);
+                _logger.LogInformation("POST UPDATE Id = {Id}", viewModel.Id);
                 return rowsAffected > 0;
             }
             catch (Exception ex)
@@ -131,7 +137,7 @@ namespace PetConnect.Application.Services
             }
         }
 
-        public async Task<bool> DeactivateAsync(int id)
+        public async Task<bool> DeactivateAsync(int id, string userId)
         {
            try
             {
@@ -139,7 +145,7 @@ namespace PetConnect.Application.Services
                 if (payment == null) return false;
 
                 payment.UpdatedOn = DateTime.UtcNow;
-                payment.UpdatedBy = "System";
+                payment.UpdatedBy = userId;
                 
                 payment.IsActive = false;
                 var rowsAffected = await _context.SaveChangesAsync();

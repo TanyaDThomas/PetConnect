@@ -5,8 +5,8 @@ namespace PetConnect.Domain.Contracts
 {
     public interface IPaymentService
     {
-        Task<bool> CreateAsync(PaymentViewModel viewModel);
-        Task<bool> UpdateAsync(PaymentViewModel viewModel);
-        Task<bool> DeactivateAsync(int id);
+        Task<bool> CreateAsync(PaymentViewModel viewModel, string userName);
+        Task<bool> UpdateAsync(PaymentViewModel viewModel, string userName);
+        Task<bool> DeactivateAsync(int id, string userName);
     }
 }

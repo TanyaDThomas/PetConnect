@@ -1,23 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PetConnect.Application.Services;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using PetConnect.Domain.Contracts;
-using PetConnect.Domain.Entities;
-using PetConnect.Domain.Enums;
+using PetConnect.Infrastructure.Identity;
 using PetConnect.ViewModels;
 
 namespace PetConnect.Controllers
 {
+    [Authorize]
     public class PaymentController : Controller
     {
         private readonly IPaymentQueryService _queryService;
         private readonly IAdoptionService _adoptionService;
         private readonly IPaymentService _paymentService;
-        public PaymentController(IPaymentQueryService queryService, IAdoptionService adoptionService, IPaymentService paymentService)
+        private readonly UserManager<AppUser> _userManager;
+        public PaymentController(IPaymentQueryService queryService, IAdoptionService adoptionService, IPaymentService paymentService, UserManager<AppUser> userManager)
         {
             _queryService = queryService;
             _adoptionService = adoptionService;
             _paymentService = paymentService;
+            _userManager = userManager;
         }
         public async Task<IActionResult> Index()
         {
@@ -52,7 +54,10 @@ namespace PetConnect.Controllers
             if (!ModelState.IsValid)
                 return View(viewModel);
 
-            var success = await _paymentService.CreateAsync(viewModel);
+            var userId = _userManager.GetUserId(User);
+            if (userId == null) return Unauthorized();
+
+            var success = await _paymentService.CreateAsync(viewModel, userId);
 
             if (!success)
             {
@@ -83,7 +88,10 @@ namespace PetConnect.Controllers
             if (!ModelState.IsValid)
                 return View(viewModel);
 
-            var success = await _paymentService.UpdateAsync(viewModel);
+            var userId = _userManager.GetUserId(User);
+            if(userId == null) return Unauthorized();
+
+            var success = await _paymentService.UpdateAsync(viewModel, userId);
 
             if (!success)
             {
@@ -101,7 +109,10 @@ namespace PetConnect.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Deactivate(int id)
         {
-            var success = await _paymentService.DeactivateAsync(id);
+            var userId = _userManager.GetUserId(User);
+            if (userId == null) return Unauthorized();
+
+            var success = await _paymentService.DeactivateAsync(id, userId);
             if (!success) return NotFound();
             return RedirectToAction(nameof(Index));
         }

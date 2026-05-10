@@ -23,5 +23,6 @@
         public ICollection<Animal> Animals { get; set; } = new List<Animal>();
         public ICollection<Adopter> Adopters { get; set; } = new List<Adopter>();
         public ICollection<Adoption> Adoptions { get; set; }= new List<Adoption>();
+        public ICollection<UserShelter> UserShelters { get; set; } = new List<UserShelter>();
     }
 }

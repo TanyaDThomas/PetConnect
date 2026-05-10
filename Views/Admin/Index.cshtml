@@ -1,0 +1,65 @@
+﻿
+@model IEnumerable<PetConnect.Domain.Entities.UserShelter>
+
+    
+@{
+    ViewData["Title"] = "List of User Roles";
+}
+
+<h2>User Shelter Assignments</h2>
+
+<hr />
+<a asp-action="Create" class="btn btn-primary">
+    Assign User
+</a>
+<hr />
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>User</th>
+           
+            <th>Shelter</th>
+            <th>City </th>
+            <th>State</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.User.UserName</td>
+                <td>@item.Shelter.Name</td>
+                <td>@item.Shelter.City</td>
+                <td>@item.Shelter.State</td>
+                <td>@item.RoleInShelter</td>
+
+                <td class="d-flex gap-2">
+                    <a asp-action="Update"
+                           asp-controller="Admin"
+                           asp-route-id="@item.Id"
+                           class="btn btn-sm btn-warning">
+                        Update
+                    </a>
+
+                    <form asp-action="Deactivate" asp-controller="Admin"
+                          asp-route-id="@item.Id"
+                          method="post"
+                          style="display:inline">
+
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            Deactivate
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    </table>
+
+

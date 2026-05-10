@@ -5,8 +5,8 @@ namespace PetConnect.Domain.Contracts
 {
     public interface IAnimalService
     {
-        Task<bool> CreateAsync(AnimalViewModel viewModel);
-        Task<bool> UpdateAsync(AnimalViewModel viewModel);
-        Task<bool> DeactivateAsync(int id);
+        Task<bool> CreateAsync(AnimalViewModel viewModel, string userName);
+        Task<bool> UpdateAsync(AnimalViewModel viewModel, string userName);
+        Task<bool> DeactivateAsync(int id, string userName);
     }
 }

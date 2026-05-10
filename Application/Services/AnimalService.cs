@@ -16,7 +16,7 @@ namespace PetConnect.Application.Services
             _context = context;
             _logger = logger;
         }
-        public async Task<bool> CreateAsync(AnimalViewModel viewModel)
+        public async Task<bool> CreateAsync(AnimalViewModel viewModel, string userId)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace PetConnect.Application.Services
                 };
 
                 animal.CreatedOn = DateTime.UtcNow;
-                animal.CreatedBy = "System";
+                animal.CreatedBy = userId;
                 animal.IsActive = true;
                 animal.IsAdopted = false;
 
@@ -74,17 +74,15 @@ namespace PetConnect.Application.Services
 
 
 
-        public async Task<bool> UpdateAsync(AnimalViewModel viewModel)
+        public async Task<bool> UpdateAsync(AnimalViewModel viewModel, string userId)
         {
             try
             {
-                var animal = await _context.Animals
-                    .FirstOrDefaultAsync(a => a.Id == viewModel.Id);
+                var animal = await _context.Animals.FirstOrDefaultAsync(a => a.Id == viewModel.Id);
 
-                if (animal == null)
-                    return false;
+                if (animal == null) return false;
 
-                // update scalar fields ONLY
+               
                 animal.ShelterId = viewModel.ShelterId;
                 animal.AnimalTypeId = viewModel.AnimalTypeId;
                 animal.Name = viewModel.Name;
@@ -98,9 +96,9 @@ namespace PetConnect.Application.Services
                 animal.IsAdopted = viewModel.IsAdopted;
 
                 animal.UpdatedOn = DateTime.UtcNow;
-                animal.UpdatedBy = "System";
+                animal.UpdatedBy = userId;
 
-                // ATTRIBUTES HANDLING (safe reset + rebuild)
+                
                 var existingAttributes = await _context.AnimalAttributes
                     .Where(a => a.AnimalId == viewModel.Id)
                     .ToListAsync();
@@ -131,7 +129,7 @@ namespace PetConnect.Application.Services
     
 
 
-        public async Task<bool> DeactivateAsync(int id)
+        public async Task<bool> DeactivateAsync(int id, string userId)
         {
             try
             {
@@ -139,7 +137,7 @@ namespace PetConnect.Application.Services
                 if (existingAnimal == null) return false;
 
                 existingAnimal.UpdatedOn = DateTime.UtcNow;
-                existingAnimal.UpdatedBy = "System";
+                existingAnimal.UpdatedBy = userId;
 
                 existingAnimal.IsActive = false;
                 var rowsAffected = await _context.SaveChangesAsync();

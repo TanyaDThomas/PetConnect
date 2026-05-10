@@ -14,33 +14,33 @@ namespace PetConnect.Application.Services
         }
 
         //WRITE
-        public async Task<Note> CreateAsync(Note note)
+        public async Task<Note> CreateAsync(Note note, string userId)
         {
             note.CreatedOn = DateTime.Now;
-            note.CreatedBy = "System";
+            note.CreatedBy = userId;
             note.IsActive = true;
             _context.Notes.Add(note);
             await _context.SaveChangesAsync();
             return note;
         }
 
-        public async Task<bool> DeactivateAsync(int id)
+        public async Task<bool> DeactivateAsync(int id, string userId)
         {
             var note = await _context.Notes.FindAsync(id);
             if (note == null) return false;
             note.UpdatedOn = DateTime.Now;
-            note.UpdatedBy = "System";
+            note.UpdatedBy = userId;
             note.IsActive = false;
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> UpdateAsync(Note note)
+        public async Task<bool> UpdateAsync(Note note, string userId)
         {
             try
             {
                 note.UpdatedOn = DateTime.Now;
-                note.UpdatedBy = "System";
+                note.UpdatedBy = userId;
                 _context.Entry(note).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return true;

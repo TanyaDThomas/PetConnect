@@ -1,0 +1,54 @@
+﻿@model PetConnect.ViewModels.AssignUserShelterViewModel
+
+@{
+    ViewData["Title"] = "Update an user to a shelter";
+}
+
+
+
+<h2>Update User assigned to Shelter</h2>
+
+<form asp-action="Update" method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label>User</label>
+        <select asp-for="UserId"
+                asp-items="Model.Users"
+                class="form-control">
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Shelter</label>
+        <select asp-for="ShelterId"
+                asp-items="Model.Shelters"
+                class="form-control">
+        </select>
+    </div>
+
+
+
+    <div class="mb-3">
+        <label>Role</label>
+        <select asp-for="RoleInShelter"
+                asp-items="Model.Roles"
+                class="form-control">
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Assign User
+    </button>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

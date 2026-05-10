@@ -1,25 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using PetConnect.Application.Services;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
 using PetConnect.Domain.Enums;
+using PetConnect.Infrastructure.Identity;
 using PetConnect.ViewModels;
 
 namespace PetConnect.Controllers
 {
+    [Authorize]
     public class NoteController : Controller
     {
         private readonly INoteQueryService _queryService;
         private readonly INoteService _noteService;
         private readonly IAdopterQueryService _adopterQueryService;
         private readonly IAnimalQueryService _animalQueryService;
+        private readonly UserManager<AppUser> _userManager;
 
-        public NoteController(INoteQueryService queryService, INoteService noteService, IAdopterQueryService adopterQueryService, IAnimalQueryService animalQueryService)
+        public NoteController(INoteQueryService queryService, INoteService noteService, IAdopterQueryService adopterQueryService, IAnimalQueryService animalQueryService, UserManager<AppUser> userManager)
         {
             _queryService = queryService;
             _noteService = noteService;
             _adopterQueryService = adopterQueryService;
             _animalQueryService = animalQueryService;
+            _userManager = userManager;
         }
         public async Task<IActionResult> Index(NoteEntityType? entityType = null, int? entityId = null)
         {
@@ -164,9 +170,11 @@ namespace PetConnect.Controllers
                     IsInternal = viewModel.IsInternal
 
                 };
+                var userId = _userManager.GetUserId(User);
+                if (userId == null) return Unauthorized();
 
-                await _noteService.CreateAsync(note);
-                //return RedirectToAction("Index");
+                await _noteService.CreateAsync(note, userId);
+                
                 return Redirect(viewModel.ReturnUrl ?? "/Note");
             }
             return View(viewModel);
@@ -203,7 +211,10 @@ namespace PetConnect.Controllers
                 note.Content = viewModel.Content;
                 note.IsInternal = viewModel.IsInternal;
 
-                await _noteService.UpdateAsync(note);
+                var userId = _userManager.GetUserId(User);
+                if (userId == null) return Unauthorized();
+
+                await _noteService.UpdateAsync(note, userId);
                 return RedirectToAction("Index");
             }
             return View(viewModel);
@@ -214,7 +225,10 @@ namespace PetConnect.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Deactivate(int id)
         {
-            await _noteService.DeactivateAsync(id);
+            var userId = _userManager.GetUserId(User);
+            if (userId == null) return Unauthorized();
+
+            await _noteService.DeactivateAsync(id, userId);
             return RedirectToAction("Index");
         }
     }
