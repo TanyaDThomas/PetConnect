@@ -1,4 +1,5 @@
-﻿using PetConnect.Domain.Entities;
+﻿using PetConnect.Application.Services;
+using PetConnect.Domain.Entities;
 using PetConnect.Domain.Enums;
 
 namespace PetConnect.ViewModels
@@ -19,5 +20,9 @@ namespace PetConnect.ViewModels
 
         public DateTime AdoptionDate { get; set; }
         public AdoptionStatus Status { get; set; }
+
+     
+       
+      
     }
 }

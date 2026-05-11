@@ -6,9 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
 using PetConnect.Infrastructure.Identity;
-
 using PetConnect.ViewModels;
-using static System.Net.Mime.MediaTypeNames;
+
 
 
 namespace PetConnect.Controllers
@@ -51,7 +50,9 @@ namespace PetConnect.Controllers
 
         }
 
-        // GET Assign User
+
+
+        // GET Assign User - Form
 
         public async Task<IActionResult> Create()
         {
@@ -85,92 +86,97 @@ namespace PetConnect.Controllers
         }
 
 
-        // POST Create Assignment - Submission
+
+       
+        //POST Create Assingment - submit
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AssignUserShelterViewModel viewModel)
         {
             if (!ModelState.IsValid)
-            {
                 return View(viewModel);
-            }
 
-            var success = await _userShelterService.CreateAsync(viewModel.UserId, viewModel.ShelterId, viewModel.RoleInShelter);
-            if (!success) return NotFound();
+            var success = await _userShelterService.CreateAsync(
+                viewModel.UserId,
+                viewModel.ShelterId,
+                viewModel.RoleInShelter);
+
+            if (!success)
+                return NotFound();
 
             return RedirectToAction(nameof(Index));
         }
 
 
-        // GET Update UserShelter
-        public async Task<IActionResult> Update(int id)
+    
+        //GET Update assignment
+        public async Task<IActionResult> Update(string userId, int shelterId)
         {
-            var existingUser = await _userShelterQueryService.GetByIdAsync(id);
-            if (existingUser == null) return NotFound();
+            var existing = await _userShelterQueryService
+                .GetByUserAndShelterAsync(userId, shelterId);
+
+            if (existing == null) return NotFound();
 
             var shelters = await _shelterQueryService.GetShelterListAsync();
 
             var viewModel = new AssignUserShelterViewModel
             {
-                Id = existingUser.Id,
-                UserId = existingUser.UserId,
-                ShelterId = existingUser.ShelterId,
-                RoleInShelter = existingUser.RoleInShelter,
+                UserId = existing.UserId,
+                ShelterId = existing.ShelterId,
+                RoleInShelter = existing.RoleInShelter,
 
                 Users = _userManager.Users.Select(u => new SelectListItem
                 {
                     Value = u.Id,
                     Text = u.Email
-                }).ToList(),
+                }),
 
                 Shelters = shelters.Select(s => new SelectListItem
                 {
                     Value = s.Id.ToString(),
                     Text = $"{s.Name} - {s.City}, {s.State}"
-                }).ToList(),
-
-                Roles = new List<SelectListItem>
-                {
-                    new SelectListItem { Value = ShelterRoles.Manager, Text = "Manager" },
-                    new SelectListItem { Value = ShelterRoles.Staff, Text = "Staff"}
-                }
-
+                })
             };
 
             return View(viewModel);
-
         }
 
-    
+       
 
-        //POST Update UserShelter
+        //POST Update Assignment
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(AssignUserShelterViewModel viewModel)
         {
-            if(!ModelState.IsValid)
-            {
+            if (!ModelState.IsValid)
                 return View(viewModel);
-            }
 
-            var success = await _userShelterService.UpdateAsync(viewModel.Id, viewModel.RoleInShelter);
-            if (!success) return NotFound();
+            var success = await _userShelterService.UpdateAsync(
+                viewModel.UserId,
+                viewModel.ShelterId,
+                viewModel.RoleInShelter);
+
+            if (!success)
+                return NotFound();
 
             return RedirectToAction(nameof(Index));
         }
+
 
         //POST Deactivate UserShelter
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Deactivate(int id)
+        public async Task<IActionResult> Deactivate(string userId, int shelterId)
         {
-            var success = await _userShelterService.DeactivateAsync(id);
-            if (!success) return NotFound();
+            var success = await _userShelterService.DeactivateAsync(userId, shelterId);
+
+            if (!success)
+                return NotFound();
 
             return RedirectToAction(nameof(Index));
         }
-
-
 
     }
 }

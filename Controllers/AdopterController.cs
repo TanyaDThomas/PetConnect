@@ -26,11 +26,25 @@ namespace PetConnect.Controllers
             _userManager = userManager;
             _auth = auth;
         }
+        //public async Task<IActionResult> Index()
+        //{
+        //    var adopterList = await _queryService.GetAdopterListAsync();
+
+        //    return View(adopterList);
+        //}
+
         public async Task<IActionResult> Index()
         {
             var adopterList = await _queryService.GetAdopterListAsync();
 
-            return View(adopterList);
+            var vm = new AdopterIndexViewModel
+            {
+                Adopters = adopterList,
+                TotalCount = adopterList.Count(),
+                FilteredCount = adopterList.Count()
+            };
+
+            return View(vm);
         }
 
         //GET Details Adopter

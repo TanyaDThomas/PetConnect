@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
 using PetConnect.ViewModels;
 
 namespace PetConnect.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class AnimalTypeController : Controller
     {
         private readonly IAnimalTypeQueryService _queryService;

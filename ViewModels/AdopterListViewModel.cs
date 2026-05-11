@@ -1,4 +1,6 @@
-﻿using PetConnect.Domain.Entities;
+﻿using PetConnect.Application.Services;
+using PetConnect.Domain.Entities;
+using PetConnect.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace PetConnect.ViewModels
@@ -10,6 +12,7 @@ namespace PetConnect.ViewModels
         public string PhoneNumber { get; set; } = "";
         public string Email { get; set; } = "";
         public string ShelterName { get; set; } = "";
+
 
     }
 }

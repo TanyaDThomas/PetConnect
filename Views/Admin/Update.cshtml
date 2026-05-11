@@ -8,29 +8,29 @@
 
 <h2>Update User assigned to Shelter</h2>
 
-<form asp-action="Update" method="post">
+<form asp-action="Update" method="post"
+      asp-route-userId="@Model.UserId"
+      asp-route-shelterId="@Model.ShelterId">
     @Html.AntiForgeryToken()
-
-    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="UserId" />
+ 
+   
     <div asp-validation-summary="All" class="text-danger"></div>
+
+ 
 
     <div class="mb-3">
         <label>User</label>
-        <select asp-for="UserId"
-                asp-items="Model.Users"
-                class="form-control">
-        </select>
+        <input class="form-control" value="@Model.Users.FirstOrDefault(x => x.Value == Model.UserId)?.Text" readonly />
     </div>
 
     <div class="mb-3">
         <label>Shelter</label>
-        <select asp-for="ShelterId"
-                asp-items="Model.Shelters"
-                class="form-control">
-        </select>
+        <input class="form-control" value="@Model.Shelters.FirstOrDefault(x => x.Value == Model.ShelterId.ToString())?.Text" readonly />
     </div>
 
 
+ 
 
     <div class="mb-3">
         <label>Role</label>

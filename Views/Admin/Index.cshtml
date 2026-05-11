@@ -1,7 +1,5 @@
-﻿
-@model IEnumerable<PetConnect.Domain.Entities.UserShelter>
+﻿@model IEnumerable<PetConnect.Domain.Entities.UserShelter>
 
-    
 @{
     ViewData["Title"] = "List of User Roles";
 }
@@ -18,9 +16,8 @@
     <thead>
         <tr>
             <th>User</th>
-           
             <th>Shelter</th>
-            <th>City </th>
+            <th>City</th>
             <th>State</th>
             <th>Role</th>
             <th>Action</th>
@@ -38,28 +35,31 @@
                 <td>@item.RoleInShelter</td>
 
                 <td class="d-flex gap-2">
+
+                    <!-- UPDATE -->
                     <a asp-action="Update"
-                           asp-controller="Admin"
-                           asp-route-id="@item.Id"
-                           class="btn btn-sm btn-warning">
+                           asp-route-userId="@item.UserId"
+                           asp-route-shelterId="@item.ShelterId"
+                           class="btn btn-warning btn-sm">
                         Update
                     </a>
 
-                    <form asp-action="Deactivate" asp-controller="Admin"
-                          asp-route-id="@item.Id"
-                          method="post"
-                          style="display:inline">
-
+                    <!-- DEACTIVATE -->
+                    <form asp-action="Deactivate" method="post" class="d-inline">
                         @Html.AntiForgeryToken()
 
-                        <button type="submit" class="btn btn-sm btn-danger">
+                        <input type="hidden" name="userId" value="@item.UserId" />
+                        <input type="hidden" name="shelterId" value="@item.ShelterId" />
+
+                        <button type="submit" class="btn btn-danger btn-sm">
                             Deactivate
                         </button>
                     </form>
+
                 </td>
             </tr>
         }
     </tbody>
-    </table>
+</table>
 
 

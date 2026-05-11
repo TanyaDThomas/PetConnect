@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PetConnect.Application.Services;
 using PetConnect.Domain.Contracts;
-using PetConnect.Domain.Entities;
 using PetConnect.Infrastructure.Identity;
-using PetConnect.Infrastructure.Persistence;
 using PetConnect.ViewModels;
 
 namespace PetConnect.Controllers
@@ -28,10 +26,44 @@ namespace PetConnect.Controllers
             _adopterQueryService = adopterQueryService;
             _userManager = userManager;
         }
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    var adoptionList = await _queryService.GetAdoptionListAsync();
+        //    return View(adoptionList);
+        //}
+
+        public async Task<IActionResult> Index(AdoptionSearchFilter filter)
         {
             var adoptionList = await _queryService.GetAdoptionListAsync();
-            return View(adoptionList);
+
+            var filtered = adoptionList.AsQueryable();
+
+
+            
+            if (filter.AdoptionDateFrom.HasValue)
+            {
+                adoptionList = adoptionList
+                    .Where(a => a.AdoptionDate >= filter.AdoptionDateFrom.Value)
+                    .ToList();
+            }
+
+            
+            if (filter.AdoptionDateTo.HasValue)
+            {
+                adoptionList = adoptionList
+                    .Where(a => a.AdoptionDate <= filter.AdoptionDateTo.Value)
+                    .ToList();
+            }
+
+            var viewModel = new AdoptionIndexViewModel
+            {
+                Adoptions = adoptionList,
+                Filter = filter,
+                TotalCount = adoptionList.Count(),
+                FilteredCount = filtered.Count()
+            };
+
+            return View(viewModel);
         }
 
         //GET Details Adoption

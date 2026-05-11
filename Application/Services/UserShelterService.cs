@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
+using PetConnect.Infrastructure.Identity;
 using PetConnect.Infrastructure.Persistence;
 
 namespace PetConnect.Application.Services
@@ -10,94 +11,95 @@ namespace PetConnect.Application.Services
     {
         private readonly PetConnectDbContext _context;
         private readonly ILogger<UserShelterService> _logger;
-        private readonly IUserShelterQueryService _queryService;
+     
+        private readonly UserManager<AppUser> _userManager;
 
-        public UserShelterService(PetConnectDbContext context, ILogger<UserShelterService> logger, IUserShelterQueryService queryService    )
+        public UserShelterService(PetConnectDbContext context, ILogger<UserShelterService> logger,  UserManager<AppUser> userManager)
         {
             _context = context;
             _logger = logger;
-            _queryService = queryService;
+         
+            _userManager = userManager;
         }
+
 
         public async Task<bool> CreateAsync(string userId, int shelterId, string roleInShelter)
         {
             var assignment = await _context.UserShelters
-                .FirstOrDefaultAsync(x =>
-                    x.UserId == userId &&
-                    x.ShelterId == shelterId);
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.ShelterId == shelterId);
 
             if (assignment != null)
             {
                 assignment.IsActive = true;
                 assignment.RoleInShelter = roleInShelter;
-                await _context.SaveChangesAsync();
-                return true;
+            }
+            else
+            {
+                _context.UserShelters.Add(new UserShelter
+                {
+                    UserId = userId,
+                    ShelterId = shelterId,
+                    RoleInShelter = roleInShelter,
+                    IsActive = true
+
+                });
             }
 
-            var userShelter = new UserShelter
-            {
-                UserId = userId,
-                ShelterId = shelterId,
-                RoleInShelter = roleInShelter,
-                IsActive = true
-            };
-
-            _context.UserShelters.Add(userShelter);
             await _context.SaveChangesAsync();
+
+      
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                await _userManager.RemoveFromRolesAsync(user, roles);
+                await _userManager.AddToRoleAsync(user, roleInShelter);
+            }
 
             return true;
         }
 
-        
+  
 
-        public async Task<bool> UpdateAsync(int id, string roleInShelter)
+
+
+        public async Task<bool> UpdateAsync(string userId, int shelterId, string roleInShelter)
         {
-            try
-            {
-                var existingUser = await _context.UserShelters.FirstOrDefaultAsync(eu => eu.Id == id);
-                if (existingUser == null) return false;
+            var existing = await _context.UserShelters
+                .FirstOrDefaultAsync(x =>
+                    x.UserId == userId &&
+                    x.ShelterId == shelterId);
 
-                existingUser.RoleInShelter = roleInShelter;
-
-                
-                var rowsAffected = await _context.SaveChangesAsync();
-
-                _logger.LogInformation("Updated UserShelter: {UserShelterId} {RoleInShelter}", id, roleInShelter);
-
-                return rowsAffected > 0;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "UserShelter update failed for Id {Id}", id);
+            if (existing == null)
                 return false;
-            }
-       
 
-        }
+            existing.RoleInShelter = roleInShelter;
 
-        public async Task<bool> DeactivateAsync(int id)
-        {
-            try
-            {
-                var userShelter = await _context.UserShelters.FirstOrDefaultAsync(us => us.Id == id);
-                if(userShelter == null) return false;
-
-                _logger.LogWarning("Deleting User in Shelter with Id {Id}", id);
-
-                userShelter.IsActive = false;
-                var rowsAffected = await _context.SaveChangesAsync();
-
-                return rowsAffected > 0;
-
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "User in Shelter not deleted with id {Id}", id);
-                return false;
-            }
+            await _context.SaveChangesAsync();
+            return true;
         }
 
 
-   
+     
+
+
+
+        public async Task<bool> DeactivateAsync(string userId, int shelterId)
+        {
+            var entity = await _context.UserShelters
+                .FirstOrDefaultAsync(x =>
+                    x.UserId == userId &&
+                    x.ShelterId == shelterId);
+
+            if (entity == null)
+                return false;
+
+            entity.IsActive = false;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
     }
 }

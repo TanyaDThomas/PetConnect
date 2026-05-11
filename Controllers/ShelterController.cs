@@ -8,7 +8,7 @@ using PetConnect.ViewModels;
 
 namespace PetConnect.Controllers
 {
-   [Authorize]
+    [Authorize]
     public class ShelterController : Controller
     {
         private readonly IShelterQueryService _queryService;
@@ -20,6 +20,8 @@ namespace PetConnect.Controllers
             _shelterService = shelterService;
             _userManager = userManager;
         }
+
+        
         public async Task<IActionResult> Index()
         {
             var viewModel = await _queryService.GetShelterListAsync();
@@ -35,12 +37,14 @@ namespace PetConnect.Controllers
         }
 
         //GET Create Shelter
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
         //POST Create Shelter
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ShelterViewModel viewModel)
@@ -57,6 +61,7 @@ namespace PetConnect.Controllers
         }
 
         //GET Update Shelter
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id)
         {
             var viewModel = await _queryService.GetShelterUpdateAsync(id);
@@ -65,6 +70,7 @@ namespace PetConnect.Controllers
         }
 
         //POST Update Shelter
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(ShelterViewModel viewModel)
@@ -81,6 +87,7 @@ namespace PetConnect.Controllers
         }
 
         //POST Deactivate Shelter
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Deactivate(int id)

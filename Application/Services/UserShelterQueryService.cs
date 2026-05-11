@@ -47,20 +47,37 @@ namespace PetConnect.Application.Services
 
         }
 
+
+        public async Task<UserShelter?> GetByUserAndShelterAsync(string userId, int shelterId)
+        {
+            return await _context.UserShelters
+                .Include(x => x.User)
+                .Include(x => x.Shelter)
+                .FirstOrDefaultAsync(x =>
+                    x.UserId == userId &&
+                    x.ShelterId == shelterId);
+        }
+
+
+
+
         public async Task<List<UserShelter>> GetAssignmentsForUserAsync(string userId)
         {
+            var shelterIds = await _context.UserShelters
+                .Where(x => x.UserId == userId && x.IsActive)
+                .Select(x => x.ShelterId)
+                .ToListAsync();
 
             return await _context.UserShelters
                 .AsNoTracking()
                 .Include(us => us.User)
                 .Include(us => us.Shelter)
-                .Where(us => us.UserId == userId)
+                .Where(us =>
+                    us.IsActive &&
+                    shelterIds.Contains(us.ShelterId))
                 .ToListAsync();
-
         }
 
-     
-
-
+    
     }
 }

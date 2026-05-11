@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetConnect.Application.Services;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
 
 namespace PetConnect.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class AttributeDefinitionController : Controller
     {
         private readonly IAttributeDefinitionQueryService _queryService;
