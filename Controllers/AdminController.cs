@@ -109,8 +109,9 @@ namespace PetConnect.Controllers
         }
 
 
-    
-        //GET Update assignment
+
+
+
         public async Task<IActionResult> Update(string userId, int shelterId)
         {
             var existing = await _userShelterQueryService
@@ -136,13 +137,27 @@ namespace PetConnect.Controllers
                 {
                     Value = s.Id.ToString(),
                     Text = $"{s.Name} - {s.City}, {s.State}"
-                })
+                }),
+
+                Roles = new List<SelectListItem>
+        {
+            new SelectListItem
+            {
+                Value = ShelterRoles.Manager,
+                Text = "Manager"
+            },
+            new SelectListItem
+            {
+                Value = ShelterRoles.Staff,
+                Text = "Staff"
+            }
+        }
             };
 
             return View(viewModel);
         }
 
-       
+
 
         //POST Update Assignment
         [HttpPost]
