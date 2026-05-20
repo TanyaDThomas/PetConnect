@@ -1,113 +1,170 @@
 # 🐾 PetConnect  
-### ASP.NET Core MVC Animal Shelter Management System
 
-A full-stack web application built with **ASP.NET Core MVC** demonstrating a **Clean Architecture–inspired design** for managing animal shelters, adopters, animals, and adoption workflows.
+PetConnect is a multi-location animal shelter management application built with ASP.NET Core MVC using a layered, service-based architecture inspired by Clean Architecture principles.
 
----
+The application manages shelters, animals, adopters, adoptions, payments, staff, and administrative workflows while enforcing role-based access control across multiple shelter locations.
 
-# 🌟 Project Overview
+## Project Overview
 
-PetConnect is a structured, database-driven web application designed to simulate real-world shelter operations. It focuses on **clean separation of concerns**, maintainable architecture, and scalable backend design using services and Entity Framework Core.
+PetConnect was designed to simulate real-world shelter operations through a structured web application that emphasizes:
 
-The system supports full **CRUD operations** across all core entities while maintaining a clear separation between UI, business logic, and data access layers.
+- Separation of concerns
+- Maintainable backend architecture
+- Role-based authorization
+- Multi-location data management
+- Scalable CRUD operations
+- Dashboard reporting and analytics
 
----
+The system supports multiple shelters across different locations, each with its own staff, managers, animals, adopters, payments, and adoption records.
 
-# 🧩 Key Features
+## Features
 
-## 🏠 Shelter Management
-- Create, update, view, and deactivate shelters  
-- Track contact details and location data  
+### Authentication & Authorization
 
-## 🐶 Animal Management
-- Manage animals with breed, type, and adoption status  
-- Track medical and care attributes (vaccination, special needs, etc.)  
+- ASP.NET Core Identity authentication
+- Role-based access control (RBAC)
+- Protected routes and restricted operations
+- Shelter-scoped data access
 
-## 👤 Adopter System
-- Maintain adopter profiles  
-- Link adopters to adoption records  
+### Role Permissions
 
-## 📝 Adoption Workflow
-- Full adoption lifecycle management  
-- Assign animals to adopters and shelters  
-- Track adoption status and fees  
+#### Staff
+- Manage animals
+- Manage adopters
+- Manage adoptions
+- Manage payments
+- Create and view notes
+- View shelters assigned to their location
 
-## 💰 Financial Tracking
-- Store and manage adoption fees  
-- Support structured payment-related data design (extensible)  
+#### Manager
+Includes all Staff permissions plus:
+- Create staff accounts
+- Update staff information
+- Deactivate staff accounts
 
----
+#### Admin
+Full system access including:
+- Manage all shelters
+- Manage all users and staff
+- Manage animal types and attributes
+- Global reporting and dashboard access
+- Access to all shelter data
 
-# 🏗️ Architecture & Design
+## Core Functionality
 
-This project follows a **Clean Architecture–inspired layered structure**, ensuring separation of responsibilities and scalable code organization.
+### Animal Management
+- Create, update, and deactivate animals
+- Track adoption status
+- Assign animal types and attributes
+- Store shelter-specific records
 
-## 📦 Structure
+### Adoption Workflow
+- Manage adoption lifecycle
+- Link adopters to animals
+- Track adoption status and payments
 
-### Presentation Layer (Web)
-- ASP.NET Core MVC Controllers  
-- Razor Views  
+### Shelter Management
+- Multi-location shelter support
+- Shelter-specific data isolation
+- Staff assignment by shelter
 
-### Application Layer
-- Business logic services  
-- Query services (read operations)  
-- Command services (write operations)  
+### Dashboard & Reporting
+Role-specific dashboards displaying:
+- Animal totals
+- Adoption statistics
+- Pending adoptions
+- Revenue tracking
+- Animal trend charts
+- Animal type distribution charts
 
-### Domain Layer
-- Core entities  
-- Domain contracts/interfaces  
+### Search & Filtering
+Search and filtering functionality implemented for:
+- Animals
+- Adopters
+- Adoptions
 
-### Infrastructure Layer
-- Entity Framework Core  
-- Database context and persistence logic  
+## Architecture
 
-### ViewModels Layer
-- UI-specific models for data transfer and validation  
+The application follows a layered architecture inspired by Clean Architecture concepts.
 
----
+### Project Structure
 
-# ⚙️ Technology Stack
+#### Presentation Layer
+- ASP.NET Core MVC Controllers
+- Razor Views
+- ViewModels
 
-```bash
-ASP.NET Core MVC
-C#
-Entity Framework Core
-SQL Server
-LINQ
-Bootstrap 5
-Dependency Injection
-Razor Views
-```
+#### Application Layer
+- Query services (read operations)
+- Command services (write operations)
+- Business logic
 
----
-# 🎯 What This Project Demonstrates
+#### Domain Layer
+- Core entities
+- Interfaces and contracts
 
-This project was built to demonstrate:
+#### Infrastructure Layer
+- Entity Framework Core
+- SQL Server persistence
+- Data access implementation
 
-- Real-world ASP.NET Core MVC Architecture
-- Clean separation of concerns
-- Service-based design patterns
-- ViewModel mapping and UI abstraction
-- Database-first workflow using Entity Framework Core
-- Scalable CRUD system design
-- Practiccal application of Clean Architecture principles
+## Technology Stack
 
----
-# 🚀 Future Enhancements
-- ASP.NET Core Identity (authentication & role management)
-- Payment gateway integration
-- Advanced search and filtering system
-- Admin dashboard analytics
-- REST API layer for external integrations
--UI improvements and responsive enhancements
+- ASP.NET Core MVC
+- C#
+- Entity Framework Core
+- SQL Server
+- ASP.NET Core Identity
+- LINQ
+- Bootstrap 5
+- Razor Views
+- Dependency Injection
 
----
-# 👨‍💻 About the Developer
+## Testing
 
-## Tanya Thomas
-ASP.NET Core Developer focused on Clean Architecture, scalable backend systems, and real-world application design.
+Manual QA testing was performed for:
 
----
-# 📌 Summary
+- Authentication workflows
+- Authorization and protected routes
+- CRUD operations
+- Validation handling
+- Edge cases
+- Role permissions
 
-PetConnect is a demonstration of building a structured, maintainable web application using modern ASP.NET Core practices. It emphasizes separation of concerns, scalable architecture, and real-world workflow modeling for animal shelter management systems.
+See `TESTING.md` for detailed test cases and known issues.
+
+## Known Limitations
+
+Current known issues and planned improvements are documented in the testing documentation.
+
+Areas planned for future enhancement include:
+- Additional responsive design improvements
+- Real-time validation feedback
+- Pagination for large datasets
+- Expanded automated testing coverage
+
+## Deployment
+
+Deployment is currently in progress.
+
+Planned hosting architecture:
+- ASP.NET Core MVC application hosted on AWS
+- SQL Server database hosted separately
+
+## Learning Goals Demonstrated
+
+This project demonstrates practical experience with:
+
+- ASP.NET Core MVC application development
+- Entity Framework Core
+- Authentication and authorization
+- Role-based access control
+- Service-layer architecture
+- Query/write service separation
+- Relational database design
+- Dashboard and reporting systems
+- Manual QA testing practices
+
+## About
+
+Developed by Tanya Thomas as a portfolio project focused on backend architecture, scalable application structure, and real-world workflow management using ASP.NET Core technologies.
