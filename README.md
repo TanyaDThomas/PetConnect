@@ -1,4 +1,4 @@
-# 🐾 PetConnect  
+# PetConnect  
 
 PetConnect is a multi-location animal shelter management application built with ASP.NET Core MVC using a layered, service-based architecture inspired by Clean Architecture principles.
 
@@ -16,6 +16,20 @@ PetConnect was designed to simulate real-world shelter operations through a stru
 - Dashboard reporting and analytics
 
 The system supports multiple shelters across different locations, each with its own staff, managers, animals, adopters, payments, and adoption records.
+
+## Screenshots
+
+### Dashboard
+![Dashboard](images/dashboard.png)
+
+### Animal Management
+![Animal Management](images/animals.png)
+
+### Adoption Workflow
+![Adoption Workflow](images/adoptions.png)
+
+### Admin Management
+![Admin Management](images/admin.png)
 
 ## Features
 
@@ -50,6 +64,17 @@ Full system access including:
 - Global reporting and dashboard access
 - Access to all shelter data
 
+## Permission Overview
+
+| Feature | Staff | Manager | Admin |
+|---|---|---|---|
+| Manage Animals | Yes | Yes | Yes |
+| Manage Adopters | Yes | Yes | Yes |
+| Manage Payments | Yes | Yes | Yes |
+| Manage Staff | No | Yes | Yes |
+| Manage Shelters | No | No | Yes |
+| Manage Animal Types | No | No | Yes |
+
 ## Core Functionality
 
 ### Animal Management
@@ -61,12 +86,29 @@ Full system access including:
 ### Adoption Workflow
 - Manage adoption lifecycle
 - Link adopters to animals
-- Track adoption status and payments
+- Track adoption status and shelter-related payments
+- Maintain operational notes attached to records
 
 ### Shelter Management
 - Multi-location shelter support
 - Shelter-specific data isolation
 - Staff assignment by shelter
+
+### Payment Tracking
+- Track adoption-related payments
+- Support shelter-scoped payment visibility
+- Separate donation records from shelter operational payments
+
+### Notes System
+
+Users can create and manage notes attached to operational records including:
+
+- Animals
+- Adopters
+- Adoptions
+- Payments
+
+This allows shelter staff to maintain contextual records and workflow-related updates tied to specific entities.
 
 ### Dashboard & Reporting
 Role-specific dashboards displaying:
@@ -114,7 +156,7 @@ The application follows a layered architecture inspired by Clean Architecture co
 - C#
 - Entity Framework Core
 - SQL Server
-- ASP.NET Core Identity
+- ASP.NET Core Identity for authentication / authorization
 - LINQ
 - Bootstrap 5
 - Razor Views
@@ -168,3 +210,5 @@ This project demonstrates practical experience with:
 ## About
 
 Developed by Tanya Thomas as a portfolio project focused on backend architecture, scalable application structure, and real-world workflow management using ASP.NET Core technologies.
+
+
