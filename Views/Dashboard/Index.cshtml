@@ -1,0 +1,220 @@
+﻿@model PetConnect.ViewModels.DashboardViewModel
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@using System
+
+@{
+    var name = User.Identity?.Name ?? "Guest";
+
+    var hour = DateTime.Now.Hour;
+
+    var greeting = hour < 12 ? "Good Morning" :
+                   hour < 18 ? "Good Afternoon" :
+                                "Good Evening";
+}
+
+
+
+<div class="container-fluid">
+
+
+    <h1 class="font-display">@greeting, @name  <span class="animate-wag">🐾</span> </h1>
+    <p class="text-muted-foreground"> Here's what's happening across Pet Connect today.</p>
+
+    <!-- Stats Cards -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="dashboard-card">
+
+                <div class="logo-circle bg-coral">
+                    <i class="fa-solid fa-paw"></i>
+                </div>
+
+                <div>
+                    <h6 class="card-title">Total Animals</h6>
+                    <h3 class="card-number">@Model.TotalAnimals</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <div class="logo-circle bg-sage">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+
+                <div>
+                    <h6 class="card-title">Adoptions</h6>
+                    <h3 class="card-number">@Model.Adoptions</h3>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <div class="logo-circle bg-amber">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+
+                <div>
+                    <h6 class="card-title">Pending</h6>
+                    <h3 class="card-number">@Model.PendingAdoptions</h3>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <div class="logo-circle bg-blue">
+                    <i class="fa-solid fa-dollar-sign"></i>
+                </div>
+
+                <div>
+                    <h6 class="card-title">Revenue</h6>
+                    <h3 class="card-number">$@Model.TotalRevenue</h3>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+    
+  
+<!-- Chart -->
+<div class="row g-3">
+
+    <!-- Animal Trends -->
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5 class="mb-4">
+                    Animal Trends
+                </h5>
+
+                <canvas id="animalTrendsChart"></canvas>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Animals by Species -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5 class="mb-4">
+                    Animals by Species
+                </h5>
+
+                <canvas id="speciesChart"></canvas>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+        
+  
+
+
+
+
+
+
+
+<script>
+
+    //
+    // Animal Trends (Line Chart)
+    //
+
+    const trendsCtx = document.getElementById('animalTrendsChart');
+
+    new Chart(trendsCtx, {
+        type: 'line',
+
+        data: {
+            labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AnimalTrendLabels)),
+
+            datasets: [{
+                label: 'Animals',
+
+                data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AnimalTrendData)),
+
+                borderColor: '#FF7A5A',
+                backgroundColor: '#FFE5DD',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 4
+            }]
+        },
+
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+
+    //
+    // Animals by Species (Doughnut Chart)
+    //
+
+       const speciesCtx = document.getElementById('speciesChart');
+
+    new Chart(speciesCtx, {
+        type: 'doughnut',
+
+        data: {
+            labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.SpeciesLabels)),
+
+            datasets: [{
+                data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.SpeciesData)),
+
+                backgroundColor: [
+                    '#FF7A5A',
+                    '#4FA89A',
+                    '#F4B740',
+                    '#3A312C',
+                    '#E5E7EB'
+                ],
+
+                borderWidth: 0
+            }]
+        },
+
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+</script>
+
+

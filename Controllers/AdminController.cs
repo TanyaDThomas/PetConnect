@@ -12,7 +12,7 @@ using PetConnect.ViewModels;
 
 namespace PetConnect.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin,Manager")]
     public class AdminController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -27,12 +27,17 @@ namespace PetConnect.Controllers
             _userShelterService = userShelterService;
             _shelterQueryService = shelterQueryService;
         }
+
+        [Authorize(Roles ="Admin,Manager")]
         public async Task<IActionResult> Index()
         {
-            
+          
+
             var userId = _userManager.GetUserId(User);
             if (userId == null) return Unauthorized();
+
             
+
 
             List<UserShelter> assignments;
 
@@ -40,13 +45,21 @@ namespace PetConnect.Controllers
                 {
                     assignments = await _userShelterQueryService.GetUserShelterListAsync();
                 }
-                else
+                else if (User.IsInRole ("Manager"))
                 {
                     
                     assignments = await _userShelterQueryService.GetAssignmentsForUserAsync(userId);
                 }
+                else if (!User.IsInRole("Admin") && !User.IsInRole("Manager"))
+                {
+                    return Forbid();
+                }
+                else
+                {
+                    return Forbid();
+                }
 
-                return View(assignments);
+            return View(assignments);
 
         }
 

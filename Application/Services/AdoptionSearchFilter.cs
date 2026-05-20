@@ -16,8 +16,10 @@ namespace PetConnect.Application.Services
 
        
         public AdoptionStatus? Status { get; set; }
+        public string? SearchTerm { get; set; }
 
-      
+
+
         public bool? ActiveOnly { get; set; } = true;
 
        

@@ -1,29 +1,50 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
 using PetConnect.Domain.Enums;
+using PetConnect.Infrastructure.Identity;
 using PetConnect.Infrastructure.Persistence;
 using PetConnect.ViewModels;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PetConnect.Application.Services
 {
     public class AdopterQueryService : IAdopterQueryService
     {
         private readonly PetConnectDbContext _context;
-        public AdopterQueryService(PetConnectDbContext context)
+        private readonly UserManager<AppUser> _userManager;
+        public AdopterQueryService(PetConnectDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         //GET LIST FOR INDEX
-        public async Task<List<AdopterListViewModel>> GetAdopterListAsync()
+        public async Task<List<AdopterListViewModel>> GetAdopterListAsync(string userId)
         {
-            var adopters = await _context.Adopters
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
+            var query = _context.Adopters
                 .AsNoTracking()
                 .Include(a => a.Shelter)
-                .Where(a => a.IsActive)
-                .ToListAsync();
+                .Where(a => a.IsActive);
+
+            if (!isAdmin)
+            {
+                var userShelterIds = await _context.UserShelters
+                    .Where(us => us.UserId == userId && us.IsActive)
+                    .Select(us => us.ShelterId)
+                    .ToListAsync();
+
+                query = query.Where(a => userShelterIds.Contains(a.ShelterId));
+            }
+
+            var adopters = await query.ToListAsync();
 
             return adopters.Select(a => new AdopterListViewModel
             {
@@ -32,8 +53,30 @@ namespace PetConnect.Application.Services
                 PhoneNumber = a.PhoneNumber,
                 Email = a.Email,
                 ShelterName = a.Shelter?.Name ?? ""
-
             }).ToList();
+
+            //var userShelterIds = await _context.UserShelters
+            //    .Where(us => us.UserId == userId && us.IsActive)
+            //    .Select(us => us.ShelterId)
+            //    .ToListAsync();
+
+
+            //var adopters = await _context.Adopters
+            //    .AsNoTracking()
+            //    .Include(a => a.Shelter)
+            //    .Where(a => a.IsActive)
+            //    .Where(a => userShelterIds.Contains(a.ShelterId))
+            //    .ToListAsync();
+
+            //return adopters.Select(a => new AdopterListViewModel
+            //{
+            //    Id = a.Id,
+            //    FullName = $"{a.FirstName} {a.LastName}",
+            //    PhoneNumber = a.PhoneNumber,
+            //    Email = a.Email,
+            //    ShelterName = a.Shelter?.Name ?? ""
+
+            //}).ToList();
         }
 
         //GET LIST FOR DETAILS
@@ -129,6 +172,19 @@ namespace PetConnect.Application.Services
                 Value = a.Id.ToString(),
                 Text = a.FullName
             }).ToList();
+        }
+
+        public async Task<List<SelectListItem>> GetSelectListBySheltersAsync(List<int> shelterIds)
+        {
+            return await _context.Adopters
+                .AsNoTracking()
+                .Where(a => a.IsActive && shelterIds.Contains(a.ShelterId))
+                .Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = $"{a.FirstName} {a.LastName}"
+                })
+                .ToListAsync();
         }
     }
 }

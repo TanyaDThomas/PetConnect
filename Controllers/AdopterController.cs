@@ -26,25 +26,32 @@ namespace PetConnect.Controllers
             _userManager = userManager;
             _auth = auth;
         }
-        //public async Task<IActionResult> Index()
-        //{
-        //    var adopterList = await _queryService.GetAdopterListAsync();
+    
 
-        //    return View(adopterList);
-        //}
-
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchTerm)
         {
-            var adopterList = await _queryService.GetAdopterListAsync();
+            var userId = _userManager.GetUserId(User);
+            if (userId == null) return Unauthorized();
 
-            var vm = new AdopterIndexViewModel
+            var adopterList = await _queryService.GetAdopterListAsync(userId);
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                adopterList = adopterList
+                    .Where(s => s.FullName.Contains(searchTerm) ||
+                                s.City.Contains(searchTerm) ||
+                                s.State.Contains(searchTerm))
+                    .ToList();
+            }
+
+            var viewModel = new AdopterIndexViewModel
             {
                 Adopters = adopterList,
                 TotalCount = adopterList.Count(),
                 FilteredCount = adopterList.Count()
             };
 
-            return View(vm);
+            return View(viewModel);
         }
 
         //GET Details Adopter
@@ -59,13 +66,43 @@ namespace PetConnect.Controllers
         //GET Create Adopter
         public async Task<IActionResult> Create()
         {
+            var userId = _userManager.GetUserId(User);
+            if (userId == null) return Unauthorized();
+
+            List<SelectListItem> shelters;
+
+            if (User.IsInRole("Admin"))
+            {
+                shelters = await _shelterQueryService.GetSelectListItemsAsync();
+            }
+            else
+            {
+                var allowedShelters = await _shelterQueryService
+                    .GetSheltersForManagerAsync(userId);
+
+                shelters = allowedShelters.Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = $"{s.Name} - {s.City}, {s.State}"
+                }).ToList();
+            }
+
             var viewModel = new AdopterViewModel
             {
-                Shelters = await _shelterQueryService.GetSelectListItemsAsync()
+                Shelters = shelters
             };
 
-            return View(viewModel);   
+            return View(viewModel);
         }
+        //public async Task<IActionResult> Create()
+        //{
+        //    var viewModel = new AdopterViewModel
+        //    {
+        //        Shelters = await _shelterQueryService.GetSelectListItemsAsync()
+        //    };
+
+        //    return View(viewModel);   
+        //}
 
         //POST Create Adopter
         [HttpPost]

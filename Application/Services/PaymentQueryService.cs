@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
 using PetConnect.Domain.Enums;
+using PetConnect.Infrastructure.Identity;
 using PetConnect.Infrastructure.Persistence;
 using PetConnect.ViewModels;
 
@@ -12,25 +14,54 @@ namespace PetConnect.Application.Services
     public class PaymentQueryService : IPaymentQueryService
     {
         private readonly PetConnectDbContext _context;
-        public PaymentQueryService(PetConnectDbContext context)
+        private readonly UserManager<AppUser> _userManager;
+        public PaymentQueryService(PetConnectDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
 
-        public async Task<List<PaymentListViewModel>> GetPaymentListAsync()
+        public async Task<List<PaymentListViewModel>> GetPaymentListAsync(string userId)
         {
-            return await _context.Payments
-                .AsNoTracking()
-                .Select(p => new PaymentListViewModel
-                {
-                    Id = p.Id,
-                    Amount = p.Amount,
-                    PaymentMethod = p.Type.ToString(),
-                    Status = p.Status.ToString(),
-                    PaymentDate = p.PaymentDate
-                })
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new List<PaymentListViewModel>();
+            }
+
+            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
+            var userShelterIds = await _context.UserShelters
+                .Where(us => us.UserId == userId && us.IsActive)
+                .Select(us => us.ShelterId)
                 .ToListAsync();
+
+            var query = _context.Payments
+                .AsNoTracking()
+                .Include(p => p.Adoption)
+                    .ThenInclude(a => a.Animal)
+                .Where(p => p.IsActive);
+
+            if (!isAdmin)
+            {
+                query = query.Where(p =>
+                    (p.AdoptionId != null &&
+                     p.Adoption != null &&
+                     userShelterIds.Contains(p.Adoption.Animal.ShelterId))    // shelter-based payments
+
+
+                );
+            }
+
+            return await query.Select(p => new PaymentListViewModel
+            {
+                Id = p.Id,
+                Amount = p.Amount,
+                PaymentMethod = p.Type.ToString(),
+                Status = p.Status.ToString(),
+                PaymentDate = p.PaymentDate
+            }).ToListAsync();
         }
 
         public async Task<IEnumerable<Payment>> GetAllAsync()

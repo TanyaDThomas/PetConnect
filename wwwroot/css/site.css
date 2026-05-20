@@ -19,7 +19,8 @@ html {
 
 body {
     margin: 0;
-    background-color: #f8f7f5;
+/*    background-color: #f8f7f5;*/
+    background: linear-gradient(to bottom right, #fff7f5, #f8f9fa);
     font-family: 'Inter', system-ui, sans-serif;
 }
 

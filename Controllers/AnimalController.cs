@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PetConnect.Application.Services;
 using PetConnect.Domain.Contracts;
@@ -35,8 +36,13 @@ namespace PetConnect.Controllers
     
         public async Task<IActionResult> Index(AnimalSearchFilter filter)
         {
-            var viewModel = await _queryService.GetAnimalListAsync(filter);
+            var userId = _userManager.GetUserId(User);
+            if (userId == null) return Unauthorized();
+
+            var viewModel = await _queryService.GetAnimalListAsync(filter, userId);
             return View(viewModel);
+
+           
         }
         
 
@@ -52,14 +58,43 @@ namespace PetConnect.Controllers
         //GET Create Animal 
         public async Task<IActionResult> Create()
         {
+            var userId = _userManager.GetUserId(User);
+
+            if (userId == null)
+                return Unauthorized();
+
+            List<SelectListItem> shelters;
+
+            if (User.IsInRole("Admin"))
+            {
+                shelters = (await _shelterQueryService.GetSheltersForDropdownAsync())
+                    .Select(s => new SelectListItem
+                    {
+                        Value = s.Id.ToString(),
+                        Text = $"{s.Name} - {s.City}, {s.State}"
+                    })
+                    .ToList();
+            }
+            else
+            {
+                shelters = (await _shelterQueryService.GetSheltersForManagerAsync(userId))
+                    .Select(s => new SelectListItem
+                    {
+                        Value = s.Id.ToString(),
+                        Text = $"{s.Name} - {s.City}, {s.State}"
+                    })
+                    .ToList();
+            }
+
             var viewModel = new AnimalViewModel
             {
-                Shelters = await _shelterQueryService.GetSelectListItemsAsync(),
+                Shelters = shelters,
                 AnimalTypes = await _animalTypeQueryService.GetSelectListItemsAsync()
             };
 
             return View(viewModel);
         }
+      
 
         //POST Create Animal
         [HttpPost]
@@ -76,10 +111,8 @@ namespace PetConnect.Controllers
             }
 
             var userId = _userManager.GetUserId(User);
-            if (userId == null) return Unauthorized();
 
-            if (!await _auth.CanManageShelterAsync(userId, viewModel.ShelterId))
-                return Forbid();
+            if (userId == null) return Unauthorized();
 
 
             var success = await _animalService.CreateAsync(viewModel, userId);

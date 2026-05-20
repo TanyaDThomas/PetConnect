@@ -41,10 +41,19 @@ namespace PetConnect.Controllers
                 };
                 notes = await _queryService.SearchAsync(filter);
             }
-            else
+
+            if (User.IsInRole("Admin"))
             {
                 notes = await _queryService.GetAllAsync();
             }
+            else
+            {
+                var userId = _userManager.GetUserId(User);
+                if (userId == null) return Unauthorized();
+
+                notes = await _queryService.GetNotesForUserSheltersAsync(userId);
+            }
+
 
             var viewModels = new List<NoteListViewModel>();
 
@@ -71,9 +80,13 @@ namespace PetConnect.Controllers
 
                 string contentPreview;
                 if (note.Content.Length > 100)
+                {
                     contentPreview = note.Content.Substring(0, 100) + "...";
+                }
                 else
+                {
                     contentPreview = note.Content;
+                }
 
                 viewModels.Add(new NoteListViewModel
                 {

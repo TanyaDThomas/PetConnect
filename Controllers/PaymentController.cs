@@ -23,7 +23,10 @@ namespace PetConnect.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var PaymentList = await _queryService.GetPaymentListAsync();
+            var userId = _userManager.GetUserId(User);
+            if (userId == null) return Unauthorized();
+
+            var PaymentList = await _queryService.GetPaymentListAsync(userId);
             return View(PaymentList);
         }
 

@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
 using PetConnect.Infrastructure.Identity;
 using PetConnect.Infrastructure.Persistence;
 
-namespace PetConnect.Domain.Contracts
+namespace PetConnect.Application.Services
 {
     public class ShelterAuthorizationService : IShelterAuthorizationService
     {
@@ -25,8 +26,7 @@ namespace PetConnect.Domain.Contracts
             var membership = await _context.UserShelters.FirstOrDefaultAsync(m => m.UserId == userId);
             if (membership == null) return false;
 
-            if(membership.RoleInShelter == ShelterRoles.Staff) 
-                return false;
+            
 
             return true;
 

@@ -7,6 +7,7 @@ namespace PetConnect.Domain.Contracts
     public interface INoteQueryService
     {
         Task<IEnumerable<Note>> GetAllAsync();
+        Task<IEnumerable<Note>> GetNotesForUserSheltersAsync(string userId);
         Task<Note?> GetByIdAsync(int id);
         Task<IEnumerable<Note>> GetByEntityAsync(NoteEntityType entityType, int entityId);
         Task<IEnumerable<Note>> GetRecentByEntityAsync(NoteEntityType entityType, int entityId, int count = 3);

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using PetConnect.Application.Services;
 using PetConnect.Domain.Contracts;
 using PetConnect.Infrastructure.Identity;
@@ -25,46 +26,56 @@ namespace PetConnect.Controllers
             _animalQueryService = animalQueryService;
             _adopterQueryService = adopterQueryService;
             _userManager = userManager;
+           
         }
-        //public async Task<IActionResult> Index()
-        //{
-        //    var adoptionList = await _queryService.GetAdoptionListAsync();
-        //    return View(adoptionList);
-        //}
 
-        public async Task<IActionResult> Index(AdoptionSearchFilter filter)
+        public async Task<IActionResult> Index(AdoptionSearchFilter filter, string? searchTerm)
         {
-            var adoptionList = await _queryService.GetAdoptionListAsync();
+            var userId = _userManager.GetUserId(User);
+            if (userId == null) return Unauthorized();
 
-            var filtered = adoptionList.AsQueryable();
+            var adoptionList = await _queryService.GetAdoptionListAsync(userId);
 
-
-            
-            if (filter.AdoptionDateFrom.HasValue)
+            if (!string.IsNullOrWhiteSpace(filter.SearchTerm))
             {
                 adoptionList = adoptionList
-                    .Where(a => a.AdoptionDate >= filter.AdoptionDateFrom.Value)
+                    .Where(x =>
+                        x.AdopterName.Contains(filter.SearchTerm) ||
+                        x.AnimalName.Contains(filter.SearchTerm))
                     .ToList();
+            }
+
+            var query = adoptionList.AsQueryable();
+
+            
+           
+            if (filter.AdoptionDateFrom.HasValue)
+            {
+                query = query.Where(x =>
+                    x.AdoptionDate >= filter.AdoptionDateFrom.Value);
             }
 
             
             if (filter.AdoptionDateTo.HasValue)
             {
-                adoptionList = adoptionList
-                    .Where(a => a.AdoptionDate <= filter.AdoptionDateTo.Value)
-                    .ToList();
+                query = query.Where(x =>
+                    x.AdoptionDate <= filter.AdoptionDateTo.Value);
             }
+
+            var result = query.ToList();
 
             var viewModel = new AdoptionIndexViewModel
             {
-                Adoptions = adoptionList,
+                Adoptions = result,
                 Filter = filter,
-                TotalCount = adoptionList.Count(),
-                FilteredCount = filtered.Count()
+                TotalCount = adoptionList.Count,
+                FilteredCount = result.Count
             };
 
             return View(viewModel);
         }
+
+
 
         //GET Details Adoption
         public async Task<IActionResult> Details(int id)
@@ -76,16 +87,56 @@ namespace PetConnect.Controllers
         //GET Create Adoption
         public async Task<IActionResult> Create()
         {
+            var userId = _userManager.GetUserId(User);
+            if (userId == null) return Unauthorized();
+
+            List<SelectListItem> shelters;
+            List<int> shelterIds;
+
+            if (User.IsInRole("Admin"))
+            {
+                shelters = await _shelterQueryService.GetSelectListItemsAsync();
+
+                // get all shelter ids via service (NOT DbContext)
+                var allShelters = await _shelterQueryService.GetShelterListAsync();
+                shelterIds = allShelters.Select(s => s.Id).ToList();
+            }
+            else
+            {
+                var allowedShelters = await _shelterQueryService.GetSheltersForManagerAsync(userId);
+
+                shelters = allowedShelters.Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = $"{s.Name} - {s.City}, {s.State}"
+                }).ToList();
+
+                shelterIds = allowedShelters.Select(s => s.Id).ToList();
+            }
+
             var viewModel = new AdoptionViewModel
             {
-                Shelters = await _shelterQueryService.GetSelectListItemsAsync(),
-                Adopters = await _adopterQueryService.GetSelectListItemsAsync(),
-                Animals = await _animalQueryService.GetSelectListItemsAsync(),
-               
+                Shelters = shelters,
+                Adopters = await _adopterQueryService.GetSelectListBySheltersAsync(shelterIds),
+                Animals = await _animalQueryService.GetSelectListBySheltersAsync(shelterIds)
             };
 
             return View(viewModel);
         }
+
+
+        //public async Task<IActionResult> Create()
+        //{
+        //    var viewModel = new AdoptionViewModel
+        //    {
+        //        Shelters = await _shelterQueryService.GetSelectListItemsAsync(),
+        //        Adopters = await _adopterQueryService.GetSelectListItemsAsync(),
+        //        Animals = await _animalQueryService.GetSelectListItemsAsync(),
+
+        //    };
+
+        //    return View(viewModel);
+        //}
 
         //POST Create Adoption
         [HttpPost]

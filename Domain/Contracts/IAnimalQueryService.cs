@@ -10,7 +10,7 @@ namespace PetConnect.Domain.Contracts
         Task<IEnumerable<Animal>> GetAllAsync();
         Task<Animal?> GetByIdAsync(int id);
 
-        Task<AnimalIndexViewModel> GetAnimalListAsync(AnimalSearchFilter filter);
+        Task<AnimalIndexViewModel> GetAnimalListAsync(AnimalSearchFilter filter, string userId);
         Task<List<AnimalType>> GetAnimalTypesAsync();
         Task<AnimalViewModel?> GetAnimalDetailsAsync(int id);
 
@@ -18,5 +18,7 @@ namespace PetConnect.Domain.Contracts
         Task<List<SelectListItem>> GetSelectListItemsAsync();
 
         Task<decimal?> GetAnimalFeeAsync(int animalId);
+
+        Task<List<SelectListItem>> GetSelectListBySheltersAsync(List<int> shelterIds);
     }
 }

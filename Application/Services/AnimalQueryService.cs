@@ -1,9 +1,12 @@
 ﻿
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
 using PetConnect.Domain.Enums;
+using PetConnect.Infrastructure.Identity;
 using PetConnect.Infrastructure.Persistence;
 using PetConnect.ViewModels;
 
@@ -13,10 +16,12 @@ namespace PetConnect.Application.Services
     public class AnimalQueryService : IAnimalQueryService
     {
         private readonly PetConnectDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
         
-        public AnimalQueryService(PetConnectDbContext context)
+        public AnimalQueryService(PetConnectDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         private int CalculateAge(DateTime dob)
@@ -42,13 +47,28 @@ namespace PetConnect.Application.Services
 
         // GET LIST FOR INDEX
 
-        public async Task<AnimalIndexViewModel> GetAnimalListAsync(AnimalSearchFilter filter)
+        public async Task<AnimalIndexViewModel> GetAnimalListAsync(AnimalSearchFilter filter, string userId)
         {
             var baseQuery = _context.Animals
                 .AsNoTracking()
                 .Include(a => a.Shelter)
                 .Include(a => a.AnimalType)
                 .Where(a => a.IsActive);
+
+            var user = await _userManager.FindByIdAsync(userId);
+           
+
+            if (!await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                var userShelterIds = await _context.UserShelters
+               .Where(us => us.UserId == userId && us.IsActive)
+                .Select(us => us.ShelterId)
+                .ToListAsync();
+              
+
+                baseQuery = baseQuery
+                    .Where(a => userShelterIds.Contains(a.ShelterId));
+            }
 
             var totalCount = await baseQuery.CountAsync();
 
@@ -378,6 +398,20 @@ namespace PetConnect.Application.Services
                 query = query.Where(a => EF.Property<string>(a, "Breed") == filter.Breed);
 
             return await query.ToListAsync();
+        }
+
+
+        public async Task<List<SelectListItem>> GetSelectListBySheltersAsync(List<int> shelterIds)
+        {
+            return await _context.Animals
+                .AsNoTracking()
+                .Where(a => a.IsActive && shelterIds.Contains(a.ShelterId))
+                .Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Name
+                })
+                .ToListAsync();
         }
     }
 }

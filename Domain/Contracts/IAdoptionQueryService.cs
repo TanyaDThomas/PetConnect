@@ -8,7 +8,7 @@ namespace PetConnect.Domain.Contracts
         Task<IEnumerable<Adoption>> GetAllAsync();
         Task<Adoption?> GetByIdAsync(int id);
 
-        Task<List<AdoptionListViewModel>> GetAdoptionListAsync();
+        Task<List<AdoptionListViewModel>> GetAdoptionListAsync(string userId);
         Task<AdoptionViewModel?> GetAdoptionForUpdateAsync(int id);
         Task<AdoptionDetailsViewModel?> GetAdoptionDetailsAsync(int id);
 

@@ -24,6 +24,29 @@ namespace PetConnect.Application.Services
                   .ToListAsync();
         }
 
+        public async Task<IEnumerable<Note>> GetNotesForUserSheltersAsync(string userId)
+        {
+            var shelterIds = await _context.UserShelters
+                .Where(us => us.UserId == userId && us.IsActive)
+                .Select(us => us.ShelterId)
+                .ToListAsync();
+
+            var animalIds = await _context.Animals
+                .Where(a => shelterIds.Contains(a.ShelterId))
+                .Select(a => a.Id)
+                .ToListAsync();
+
+            var notes = await _context.Notes
+                .AsNoTracking()
+                .Where(n =>
+                    n.IsActive &&
+                    n.EntityType == NoteEntityType.Animal &&
+                    animalIds.Contains(n.EntityId))
+                .ToListAsync();
+
+            return notes;
+        }
+
         public async Task<Note?> GetByIdAsync(int id)
         {
             return await _context.Notes

@@ -6,7 +6,6 @@
 @{
     ViewData["Title"] = "List of Adoptions";
 }
-
 <form method="get" asp-action="Index">
     <div class="container">
 
@@ -21,123 +20,84 @@
             </div>
             <a asp-action="Create" class="btn btn-add d-flex align-items-center gap-2">
                 <i class="fas fa-plus"></i>
-                Add Adoption
+                Add Animal
             </a>
         </div>
+ 
 
-        
-        <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
 
-            <!-- Search Bar -->
-            <div class="card-body pb-4">
-                <div class="row g-3 align-items-center">
-                    <div class="col-lg-9">
-                        <div class="position-relative">
-                            <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-4 text-muted"></i>
-                            <input type="text"
-                                   class="form-control search-input ps-5"
-                                   placeholder="Search by adoption ID, adopter, or animal..." />
+        <!-- SEARCH + FILTERS -->
+        <div class="card-body pb-4">
 
-                        </div>
-                    </div>
+            <div class="row g-3 align-items-center">
 
-            <!-- Filter Toggle -->
-            <div class="col-lg-3">
-                <button type="button"
-                        class="btn btn-outline-secondary w-100 rounded-pill"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#advancedFilters">
-                    More filters
-                </button>
-            </div>
-        </div>
-
-        
-        <div class="collapse mt-3" id="advancedFilters">
-            <div class="card card-body">
-
-                <div class="row g-3">
-
-                    <div class="col-md-6">
-                        <label class="form-label">Date From</label>
-
-                        <input type="date"
-                               name="AdoptionDateFrom"
-                               value="@Model.Filter.AdoptionDateFrom?.ToString("yyyy-MM-dd")"
-                               class="form-control" />
-                    </div>
-
-                   
-                    <div class="col-md-6">
-                        <label class="form-label">Date To</label>
-
-                        <input type="date"
-                               name="AdoptionDateTo"
-                               value="@Model.Filter.AdoptionDateTo?.ToString("yyyy-MM-dd")"
-                               class="form-control" />
-                    </div>
+                <!-- SEARCH -->
+                <div class="col-lg-9">
+                    <input type="text"
+                           name="SearchTerm"
+                           value="@Model.Filter.SearchTerm"
+                           class="form-control search-input"
+                           placeholder="Search..." />
                 </div>
 
-               
-                <div class="mt-3 d-flex justify-content-end gap-2">
-
-                    <a asp-action="Index" class="btn btn-light">
-                        Clear
-                    </a>
-
-                    <button type="submit" class="btn btn-primary">
-                        Apply Filters
+                <!-- TOGGLE -->
+                <div class="col-lg-3">
+                    <button type="button"
+                            class="btn btn-outline-secondary w-100"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#advancedFilters">
+                        More filters
                     </button>
+                </div>
+
+            </div>
+
+            <!-- ADVANCED FILTERS -->
+            <div class="collapse mt-3" id="advancedFilters">
+
+                <div class="card card-body">
+
+                    <input type="date"
+                           name="AdoptionDateFrom"
+                           value="@Model.Filter.AdoptionDateFrom?.ToString("yyyy-MM-dd")" />
+
+                    <input type="date"
+                           name="AdoptionDateTo"
+                           value="@Model.Filter.AdoptionDateTo?.ToString("yyyy-MM-dd")" />
+
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-primary">Apply</button>
+                        <a asp-action="Index" class="btn btn-light">Clear</a>
+                    </div>
 
                 </div>
 
             </div>
-        </div>
 
-    </div>
+            <!-- STATUS PILLS -->
+            <div class="d-flex gap-2 mt-3">
 
-    <hr />
-
-    <!-- STATUS -->
-    <div class="card-body pt-0">
-
-        <div class="d-flex align-items-center gap-3 mb-4">
-
-            <span class="filter-label">Status:</span>
-
-            <div class="d-flex flex-wrap gap-2">
-
-                <button type="submit"
-                        name="Status"
-                        value=""
+                <button type="submit" name="Status" value=""
                         class="pill-btn @(Model.Filter.Status == null ? "active" : "")">
                     All
                 </button>
 
-                <button type="submit"
-                        name="Status"
-                        value="@AdoptionStatus.Pending"
+                <button type="submit" name="Status" value="Pending"
                         class="pill-btn @(Model.Filter.Status == AdoptionStatus.Pending ? "active" : "")">
                     Pending
                 </button>
 
-                <button type="submit"
-                        name="Status"
-                        value="@AdoptionStatus.Approved"
+                <button type="submit" name="Status" value="Approved"
                         class="pill-btn @(Model.Filter.Status == AdoptionStatus.Approved ? "active" : "")">
                     Approved
                 </button>
 
-                <button type="submit"
-                        name="Status"
-                        value="@AdoptionStatus.Completed"
+                <button type="submit" name="Status" value="Completed"
                         class="pill-btn @(Model.Filter.Status == AdoptionStatus.Completed ? "active" : "")">
                     Completed
                 </button>
 
-                <button type="submit"
-                        name="Status"
-                        value="@AdoptionStatus.Cancelled"
+                <button type="submit" name="Status" value="Cancelled"
                         class="pill-btn @(Model.Filter.Status == AdoptionStatus.Cancelled ? "active" : "")">
                     Cancelled
                 </button>
@@ -147,15 +107,19 @@
         </div>
 
     </div>
+       
 
-   </div>
+ 
 
- </div>
+  
+  
 </form>
+
+
 <hr />
  
 
-
+           
 
 <!-- Content List -->
 <div class="container">

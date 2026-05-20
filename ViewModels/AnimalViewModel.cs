@@ -17,13 +17,13 @@ namespace PetConnect.ViewModels
        
         [Range(1, int.MaxValue, ErrorMessage = "Please select an animal type")]
         public int AnimalTypeId { get; set; }
-
         public string? AnimalTypeName { get; set; } = "";
         public IEnumerable<SelectListItem> AnimalTypes { get; set; } = new List<SelectListItem>();
 
         
         [Required(ErrorMessage = "Name is required")]
         [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters")]
+        [RegularExpression(@"^[a-zA-Z\s'-]+$", ErrorMessage = "Name contains invalid characters.")]
         public string Name { get; set; } = "";
 
         public DateTime? DateOfBirth { get; set; }

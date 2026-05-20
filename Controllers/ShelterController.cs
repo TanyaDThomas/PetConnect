@@ -21,10 +21,29 @@ namespace PetConnect.Controllers
             _userManager = userManager;
         }
 
-        
-        public async Task<IActionResult> Index()
+
+
+        public async Task<IActionResult> Index(string? searchTerm)
         {
-            var viewModel = await _queryService.GetShelterListAsync();
+
+            var shelters = await _queryService.GetShelterListAsync();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                shelters = shelters
+                    .Where(s => s.Name.Contains(searchTerm) ||
+                                s.City.Contains(searchTerm) ||
+                                s.State.Contains(searchTerm))
+                    .ToList();
+            }
+
+            var viewModel = new ShelterIndexViewModel
+            {
+                Shelters = shelters,
+                FilteredCount = shelters.Count(),
+                TotalCount = shelters.Count() 
+            };
+
             return View(viewModel);
         }
 

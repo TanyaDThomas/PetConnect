@@ -17,11 +17,13 @@ namespace PetConnect.ViewModels
 
         [Required]
         [StringLength(50)]
+        [RegularExpression(@"^[a-zA-Z\s'-]+$", ErrorMessage = "Name contains invalid characters.")]
         [Display(Name = "First Name")]
         public string FirstName { get; set; } = "";
 
         [Required]
         [StringLength(50)]
+        [RegularExpression(@"^[a-zA-Z\s'-]+$", ErrorMessage = "Name contains invalid characters.")]
         [Display(Name = "Last Name")]
         public string LastName { get; set; } = "";
 

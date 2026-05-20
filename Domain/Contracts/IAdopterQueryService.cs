@@ -9,11 +9,14 @@ namespace PetConnect.Domain.Contracts
     {
         Task<IEnumerable<Adopter>> GetAllAsync();
         Task<Adopter?> GetByIdAsync(int id);
-        Task<List<AdopterListViewModel>> GetAdopterListAsync();
+        Task<List<AdopterListViewModel>> GetAdopterListAsync(string userId);
         Task<AdopterViewModel?> GetAdopterForUpdateAsync(int id);
 
         Task<AdopterViewModel?> GetAdopterDetailsAsync(int id);
 
         Task<List<SelectListItem>> GetSelectListItemsAsync();
+
+        Task<List<SelectListItem>> GetSelectListBySheltersAsync(List<int> shelterIds);
     }
+
 }
