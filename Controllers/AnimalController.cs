@@ -2,14 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using PetConnect.Application.Services;
 using PetConnect.Domain.Contracts;
-using PetConnect.Domain.Entities;
 using PetConnect.Infrastructure.Identity;
 using PetConnect.ViewModels;
-using SQLitePCL;
-using System.Runtime.InteropServices;
+
 
 namespace PetConnect.Controllers
 {
@@ -51,6 +48,8 @@ namespace PetConnect.Controllers
         {
             var viewModel = await _queryService.GetAnimalDetailsAsync(id);
 
+            if (viewModel == null)
+                return NotFound();
 
             return View(viewModel);
         }
@@ -176,6 +175,44 @@ namespace PetConnect.Controllers
             var success = await _animalService.DeactivateAsync(id, userId);
             if(!success) return NotFound();
             return RedirectToAction(nameof(Index));
+        }
+
+
+        // MANAGE IMAGES
+        public async Task<IActionResult> ManageImages(int id)
+        {
+            var animal = await _queryService.GetAnimalDetailsAsync(id);
+
+            if (animal == null) return NotFound();
+
+            return View(animal);
+        }
+
+
+        //POST ADD IMAGES
+   
+        [HttpPost]
+        public async Task<IActionResult> AddImages(int id, List<IFormFile> files)
+        {
+            await _animalService.AddImagesAsync(id, files);
+            return RedirectToAction("Details", new { id });
+        }
+
+        // DELETE IMAGE
+        [HttpPost]
+        public async Task<IActionResult> DeleteImage(int imageId, int animalId)
+        {
+            await _animalService.DeleteImageAsync(imageId);
+            return RedirectToAction("Details", new { id = animalId });
+        }
+
+        // SET PROFILE PIC
+
+        [HttpPost]
+        public async Task<IActionResult> SetProfileImage(int animalId, int imageId)
+        {
+            await _animalService.SetProfileImageAsync(animalId, imageId);
+            return RedirectToAction("Details", new { id = animalId });
         }
 
     }

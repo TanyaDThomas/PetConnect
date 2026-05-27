@@ -7,7 +7,7 @@
 <h2>Add a New Animal</h2>
 <hr />
 
-<form asp-action="Create">
+<form asp-action="Create" method="post" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
     <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -18,7 +18,7 @@
     <div class="row mb-3">
        
         <div class="col-sm-6">
-            <div class="form-group">
+            <div class="form-group ">
                 <label asp-for="ShelterId"></label>
                 <select asp-for="ShelterId" asp-items="Model.Shelters" class="form-control">
                     <option value="">-- Select Shelter --</option>
@@ -28,7 +28,7 @@
         </div>
 
         <div class="col-sm-6">
-            <div class="form-group">
+            <div class="form-group ">
                 <label asp-for="AnimalTypeId"></label>
                 <select asp-for="AnimalTypeId" asp-items="Model.AnimalTypes" class="form-control">
                     <option value="">-- Select Animal Type --</option>
@@ -38,35 +38,43 @@
         </div>
 
 
-        <div class="col-sm-6">
+        <div class="col-sm-6 mb-3">
             <label asp-for="Name" class="form-label">Name</label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
 
-        <div class="col-md-6">
+        <div class="col-md-6 mb-3">
             <label asp-for="DateOfBirth" class="form-label">Date Of Birth</label>
             <input asp-for="DateOfBirth" class="form-control" />
             <span asp-validation-for="DateOfBirth" class="text-danger"></span>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 mb-3">
             <label asp-for="Breed" class="form-label"></label>
             <input asp-for="Breed" class="form-control" />
             <span asp-validation-for="Breed" class="text-danger"></span>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 mb-3">
             <label asp-for="Color" class="form-label">Color</label>
             <input asp-for="Color" class="form-control" />
             <span asp-validation-for="Color" class="text-danger"></span>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 mb-3">
             <label asp-for="AdoptionFee" class="form-label">Adoption Fee</label>
             <input asp-for="AdoptionFee" class="form-control" />
             <span asp-validation-for="AdoptionFee" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mt-3">
+            <div class="form-group">
+                <label asp-for="AnimalImages" class="form-label">Animal Gallery Images</label>
+                <input asp-for="AnimalImages" type="file" multiple class="form-control" />
+              
+            </div>
         </div>
 
       

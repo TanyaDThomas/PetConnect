@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetConnect.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using PetConnect.Infrastructure.Persistence;
 namespace PetConnect.Migrations
 {
     [DbContext(typeof(PetConnectDbContext))]
-    partial class PetConnectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260523191443_AddAnimalImagePath")]
+    partial class AddAnimalImagePath
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -373,28 +376,6 @@ namespace PetConnect.Migrations
                     b.HasIndex("AttributeDefinitionId");
 
                     b.ToTable("AnimalAttributes");
-                });
-
-            modelBuilder.Entity("PetConnect.Domain.Entities.AnimalImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AnimalId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AnimalId");
-
-                    b.ToTable("AnimalImages");
                 });
 
             modelBuilder.Entity("PetConnect.Domain.Entities.AnimalType", b =>
@@ -886,17 +867,6 @@ namespace PetConnect.Migrations
                     b.Navigation("AttributeDefinition");
                 });
 
-            modelBuilder.Entity("PetConnect.Domain.Entities.AnimalImage", b =>
-                {
-                    b.HasOne("PetConnect.Domain.Entities.Animal", "Animal")
-                        .WithMany("Images")
-                        .HasForeignKey("AnimalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Animal");
-                });
-
             modelBuilder.Entity("PetConnect.Domain.Entities.AnimalTypeAttribute", b =>
                 {
                     b.HasOne("PetConnect.Domain.Entities.AnimalType", "AnimalType")
@@ -962,8 +932,6 @@ namespace PetConnect.Migrations
                     b.Navigation("Adoptions");
 
                     b.Navigation("AnimalAttributes");
-
-                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("PetConnect.Domain.Entities.AnimalType", b =>

@@ -21,6 +21,9 @@
         public bool IsAdopted { get; set; }
         public bool IsActive { get; set; } = true;
 
+        public string? ImagePath { get; set; }
+        public List<AnimalImage> Images { get; set; } = new();
+
 
         public ICollection<AnimalAttribute> AnimalAttributes { get; set; } = new List<AnimalAttribute>();
 

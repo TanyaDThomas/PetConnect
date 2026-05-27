@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿
 using Microsoft.EntityFrameworkCore;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
 using PetConnect.Infrastructure.Persistence;
 using PetConnect.ViewModels;
+
 
 namespace PetConnect.Application.Services
 {
@@ -11,20 +12,98 @@ namespace PetConnect.Application.Services
     {
         private readonly PetConnectDbContext _context;
         private readonly ILogger<AnimalService> _logger;
-        public AnimalService(PetConnectDbContext context, ILogger<AnimalService> logger)
+        private readonly IWebHostEnvironment _env;
+        public AnimalService(PetConnectDbContext context, ILogger<AnimalService> logger, IWebHostEnvironment env)
         {
             _context = context;
             _logger = logger;
+            _env = env;
         }
+
         public async Task<bool> CreateAsync(AnimalViewModel viewModel, string userId)
         {
             try
             {
+                // Get wwwroot/images/animals path
+                var uploadFolder = Path.Combine(
+                    _env.WebRootPath,
+                    "images",
+                    "animals");
+
+               
+                if (!Directory.Exists(uploadFolder))
+                {
+                    Directory.CreateDirectory(uploadFolder);
+                }
+
+                string? imagePath = null;
+
+
+                // PROFILE IMAGE
+                if (viewModel.ImageFile != null &&
+                    viewModel.ImageFile.Length > 0)
+                {
+                    var uniqueFileName =
+                        Guid.NewGuid().ToString() +
+                        Path.GetExtension(viewModel.ImageFile.FileName);
+
+                    var filePath = Path.Combine(uploadFolder, uniqueFileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await viewModel.ImageFile.CopyToAsync(stream);
+                    }
+
+                    imagePath = "/images/animals/" + uniqueFileName;
+                }
+
+                // GALLERY
+                var animalImages = new List<AnimalImage>();
+
+                if (viewModel.AnimalImages != null &&
+                    viewModel.AnimalImages.Any())
+                {
+                    foreach (var file in viewModel.AnimalImages)
+                    {
+                        if (file.Length > 0)
+                        {
+                            var extension = Path.GetExtension(file.FileName);
+
+                            var uniqueFileName =
+                                Guid.NewGuid().ToString() + extension;
+
+                            var filePath = Path.Combine(
+                                uploadFolder,
+                                uniqueFileName);
+
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(stream);
+                            }
+
+                            animalImages.Add(new AnimalImage
+                            {
+                                FileName = "/images/animals/" + uniqueFileName
+                            });
+                        }
+                    }
+                }
+
+                if (string.IsNullOrEmpty(imagePath) && animalImages.Any())
+                {
+                    imagePath = animalImages.First().FileName;
+                }
+
                 var animal = new Animal
                 {
                     Id = viewModel.Id,
                     ShelterId = viewModel.ShelterId,
                     AnimalTypeId = viewModel.AnimalTypeId,
+
+                    
+                    ImagePath = imagePath, 
+                    Images = animalImages,
+
                     Name = viewModel.Name,
                     DateOfBirth = viewModel.DateOfBirth,
                     Breed = viewModel.Breed,
@@ -32,8 +111,7 @@ namespace PetConnect.Application.Services
                     AdoptionFee = viewModel.AdoptionFee,
                     IsVaccinated = viewModel.IsVaccinated,
                     HasSpecialCareNeeds = viewModel.HasSpecialCareNeeds,
-                    HasSpecialDiet = viewModel.HasSpecialDiet
-
+                    HasSpecialDiet = viewModel.HasSpecialDiet,
                 };
 
                 animal.CreatedOn = DateTime.UtcNow;
@@ -42,12 +120,13 @@ namespace PetConnect.Application.Services
                 animal.IsAdopted = false;
 
                 _context.Animals.Add(animal);
-                var rowsAffected = await _context.SaveChangesAsync();
+
+                await _context.SaveChangesAsync();
 
                 var attributeDefinitions = await _context.AnimalTypeAttributes
-                 .Where(at => at.AnimalTypeId == animal.AnimalTypeId)
-                 .Select(at => at.AttributeDefinition)
-                 .ToListAsync();
+                    .Where(at => at.AnimalTypeId == animal.AnimalTypeId)
+                    .Select(at => at.AttributeDefinition)
+                    .ToListAsync();
 
                 var animalAttributes = attributeDefinitions.Select(at =>
                     new AnimalAttribute
@@ -59,19 +138,26 @@ namespace PetConnect.Application.Services
                     }).ToList();
 
                 _context.AnimalAttributes.AddRange(animalAttributes);
+
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Animal created with Id {AnimalId}", animal.Id);
+                _logger.LogInformation(
+                    "Animal created with Id {AnimalId}",
+                    animal.Id);
 
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Operation Failed. Animal was not created");
+                _logger.LogError(
+                    ex,
+                    "Operation Failed. Animal was not created");
+
                 return false;
             }
         }
 
+        
 
 
         public async Task<bool> UpdateAsync(AnimalViewModel viewModel, string userId)
@@ -153,6 +239,73 @@ namespace PetConnect.Application.Services
                 return false;
             }
         }
+
+
+
+        // ADD IMAGES 
+        public async Task AddImagesAsync(int animalId, List<IFormFile> files)
+        {
+            var animal = await _context.Animals
+                .Include(a => a.Images)
+                .FirstOrDefaultAsync(a => a.Id == animalId);
+
+            if (animal == null) return;
+
+            var uploadFolder = Path.Combine(_env.WebRootPath, "images", "animals");
+
+            if (!Directory.Exists(uploadFolder))
+                Directory.CreateDirectory(uploadFolder);
+
+            foreach (var file in files)
+            {
+                if (file == null || file.Length == 0) continue;
+
+                var uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                var filePath = Path.Combine(uploadFolder, uniqueFileName);
+
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await file.CopyToAsync(stream);
+
+                animal.Images.Add(new AnimalImage
+                {
+                    FileName = "/images/animals/" + uniqueFileName
+                });
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        // DELETE IMAGE
+        public async Task DeleteImageAsync(int imageId)
+        {
+            var image = await _context.AnimalImages.FirstOrDefaultAsync(x => x.Id == imageId);
+            if (image == null) return;
+
+            _context.AnimalImages.Remove(image);
+            var fullPath = Path.Combine(_env.WebRootPath, image.FileName.TrimStart('/'));
+
+            if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.File.Delete(fullPath);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        // SET PROFILE PIC
+
+        public async Task SetProfileImageAsync(int animalId, int imageId)
+        {
+            var animal = await _context.Animals.FirstOrDefaultAsync(a => a.Id == animalId);
+            var image = await _context.AnimalImages.FirstOrDefaultAsync(i => i.Id == imageId);
+
+            if (animal == null || image == null) return;
+
+            animal.ImagePath = image.FileName;
+
+            await _context.SaveChangesAsync();
+        }
+   
 
     }
 }

@@ -82,6 +82,8 @@ Full system access including:
 - Track adoption status
 - Assign animal types and attributes
 - Store shelter-specific records
+- Upload and manage profile and gallery images per animal
+- Set a primary profile image 
 
 ### Adoption Workflow
 - Manage adoption lifecycle
@@ -187,11 +189,20 @@ Areas planned for future enhancement include:
 
 ## Deployment
 
+<<<<<<< HEAD
 Deployment is currently in progress.
 
 Planned hosting architecture:
 - ASP.NET Core MVC application hosted on AWS
 - SQL Server database hosted separately
+
+
+Deployment (Planned Improvements)
+
+- Planned cloud deployment using AWS 
+- Future migration of image storage to Amazon S3 for scalable media handling
+- Potential use of AWS RDS for managed SQL Server hosting
+
 
 ## Learning Goals Demonstrated
 
@@ -206,6 +217,8 @@ This project demonstrates practical experience with:
 - Relational database design
 - Dashboard and reporting systems
 - Manual QA testing practices
+- File upload and media management systems
+
 
 ## About
 

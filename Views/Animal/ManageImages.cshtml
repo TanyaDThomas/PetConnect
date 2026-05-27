@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewData["Title"] = "Manage Pictures";
+}
+
+<h2>Manage Images for @Model.Name</h2>
+
+<!-- Profile Image -->
+<div>
+    <h4>Profile Image</h4>
+
+    <img src="@(string.IsNullOrEmpty(Model.ImagePath)
+                     ? Url.Content("~/images/animals/placeholder.png")
+                     : Url.Content(Model.ImagePath))"
+         style="width:200px;height:200px;object-fit:cover;" />
+</div>
+
+<hr />
+
+
+
+<!-- Gallery -->
+<h4>Gallery</h4>
+
+<div class="d-flex flex-wrap gap-2">
+    @foreach (var img in Model.Images)
+    {
+        <div class="position-relative">
+            <img src="@Url.Content("~" + img.FileName)"
+                 style="width:120px;height:120px;object-fit:cover;" />
+
+            <div class="position-absolute top-0 end-0">
+             
+                <form asp-action="DeleteImage"
+                      asp-controller="Animal"
+                      method="post">
+    
+                    <input type="hidden" name="imageId" value="@img.Id" />
+                    <input type="hidden" name="animalId" value="@Model.Id" />
+
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        Delete
+                    </button>
+                </form>
+            </div>
+
+        
+
+            <form asp-action="SetProfileImage"
+                  asp-controller="Animal"
+                  method="post">
+
+                <input type="hidden" name="animalId" value="@Model.Id" />
+                <input type="hidden" name="imageId" value="@img.Id" />
+
+                <button type="submit" class="btn btn-primary btn-sm">
+                    Set as Profile
+                </button>
+            </form>
+        </div>
+    }
+</div>
+
+<hr />
+
+
+<form asp-action="AddImages"
+      asp-controller="Animal"
+      method="post"
+      enctype="multipart/form-data">
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <input type="hidden" name="animalId" value="@Model.Id" />
+    <input type="file" name="files" multiple />
+
+    <button type="submit" class="btn btn-success">
+        Upload
+    </button>
+</form>

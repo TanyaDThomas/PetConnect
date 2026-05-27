@@ -11,5 +11,6 @@ namespace PetConnect.ViewModels
         public int TotalCount { get; set; }
         public int FilteredCount { get; set; }
         public List<AnimalType> AnimalTypes { get; set; } = new();
+        public string? ImagePath { get; set; }
     }
 }

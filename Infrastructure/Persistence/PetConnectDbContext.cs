@@ -21,6 +21,8 @@ namespace PetConnect.Infrastructure.Persistence
         public DbSet<AnimalType> AnimalTypes { get; set; }
         public DbSet<AnimalTypeAttribute> AnimalTypeAttributes { get; set; }
         public DbSet<AttributeDefinition> AttributeDefinitions { get; set; }
+
+        public DbSet<AnimalImage> AnimalImages { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Shelter> Shelters { get; set; }

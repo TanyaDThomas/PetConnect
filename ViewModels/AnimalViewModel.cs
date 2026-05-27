@@ -2,6 +2,7 @@
 using PetConnect.Domain.Entities;
 using PetConnect.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace PetConnect.ViewModels
 {
@@ -20,7 +21,10 @@ namespace PetConnect.ViewModels
         public string? AnimalTypeName { get; set; } = "";
         public IEnumerable<SelectListItem> AnimalTypes { get; set; } = new List<SelectListItem>();
 
-        
+       
+       
+
+
         [Required(ErrorMessage = "Name is required")]
         [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters")]
         [RegularExpression(@"^[a-zA-Z\s'-]+$", ErrorMessage = "Name contains invalid characters.")]
@@ -44,8 +48,11 @@ namespace PetConnect.ViewModels
         public decimal AdoptionFee { get; set; }
 
 
+        public string? ImagePath { get; set; }
+        public IFormFile? ImageFile { get; set; }
+        public List<IFormFile>? AnimalImages { get; set; }
 
-        
+
         public bool IsVaccinated { get; set; }
         public bool HasSpecialCareNeeds { get; set; }
         public bool HasSpecialDiet { get; set; }

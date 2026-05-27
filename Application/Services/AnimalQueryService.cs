@@ -51,8 +51,10 @@ namespace PetConnect.Application.Services
         {
             var baseQuery = _context.Animals
                 .AsNoTracking()
+                .AsSplitQuery()
                 .Include(a => a.Shelter)
                 .Include(a => a.AnimalType)
+                .Include(a => a.Images)
                 .Where(a => a.IsActive);
 
             var user = await _userManager.FindByIdAsync(userId);
@@ -127,7 +129,8 @@ namespace PetConnect.Application.Services
                     AnimalTypeName = a.AnimalType.Name,
                     Breed = a.Breed,
                     IsAdopted = a.IsAdopted,
-                    ShelterName = a.Shelter.Name
+                    ShelterName = a.Shelter.Name,
+                    ImagePath = a.ImagePath
                 }).ToList(),
 
                 
@@ -139,12 +142,13 @@ namespace PetConnect.Application.Services
 
 
         //GET DETAILS
-        public async Task<AnimalViewModel?> GetAnimalDetailsAsync(int id)
+        public async Task<AnimalDetailsViewModel?> GetAnimalDetailsAsync(int id)
         {
             var animal = await _context.Animals
                     .AsNoTracking()
                     .AsSplitQuery()
                     .Include(a => a.Shelter)
+                    .Include(a => a.Images)
                     .Include(a => a.AnimalAttributes)
                         .ThenInclude(aa => aa.AttributeDefinition)
                     .Where(a => a.IsActive)
@@ -160,9 +164,10 @@ namespace PetConnect.Application.Services
                 .Take(5)
                 .ToListAsync();
 
-            return new AnimalViewModel
+            return new AnimalDetailsViewModel
             {
                 Id = animal.Id,
+                ImagePath = animal.ImagePath,
 
                 ShelterId = animal.ShelterId,
                 AnimalTypeId = animal.AnimalTypeId,
@@ -176,21 +181,58 @@ namespace PetConnect.Application.Services
                 Color = animal.Color,
                 AdoptionFee = animal.AdoptionFee,
                 Breed = animal.Breed,
+
                 IsVaccinated = animal.IsVaccinated,
                 HasSpecialCareNeeds = animal.HasSpecialCareNeeds,
                 HasSpecialDiet = animal.HasSpecialDiet,
                 IsAdopted = animal.IsAdopted,
                 IsActive = animal.IsActive,
+
                 RecentNotes = notes,
 
+                Images = animal.Images.ToList(), 
+
                 Attributes = animal.AnimalAttributes
-                .Select(aa => new AnimalAttributeVm
-                {
-                    Name = aa.AttributeDefinition.Name,
-                    Value = aa.Value ?? ""
-                })
-                .ToList()
-                };
+        .Select(aa => new AnimalAttributeVm
+        {
+            Name = aa.AttributeDefinition.Name,
+            Value = aa.Value ?? ""
+        })
+        .ToList()
+            };
+
+            //return new AnimalDetailsViewModel
+            //{
+            //    Id = animal.Id,
+            //    ImagePath = animal.ImagePath,
+
+            //    ShelterId = animal.ShelterId,
+            //    AnimalTypeId = animal.AnimalTypeId,
+
+            //    ShelterName = animal.Shelter?.Name ?? "",
+            //    AnimalTypeName = animal.AnimalType?.Name ?? "",
+
+            //    Name = animal.Name,
+            //    DateOfBirth = animal.DateOfBirth,
+            //    Age = animal.DateOfBirth.HasValue ? CalculateAge(animal.DateOfBirth.Value) : 0,
+            //    Color = animal.Color,
+            //    AdoptionFee = animal.AdoptionFee,
+            //    Breed = animal.Breed,
+            //    IsVaccinated = animal.IsVaccinated,
+            //    HasSpecialCareNeeds = animal.HasSpecialCareNeeds,
+            //    HasSpecialDiet = animal.HasSpecialDiet,
+            //    IsAdopted = animal.IsAdopted,
+            //    IsActive = animal.IsActive,
+            //    RecentNotes = notes,
+
+            //    Attributes = animal.AnimalAttributes
+            //    .Select(aa => new AnimalAttributeVm
+            //    {
+            //        Name = aa.AttributeDefinition.Name,
+            //        Value = aa.Value ?? ""
+            //    })
+            //    .ToList()
+            //    };
         }
 
 

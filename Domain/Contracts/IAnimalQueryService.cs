@@ -12,7 +12,7 @@ namespace PetConnect.Domain.Contracts
 
         Task<AnimalIndexViewModel> GetAnimalListAsync(AnimalSearchFilter filter, string userId);
         Task<List<AnimalType>> GetAnimalTypesAsync();
-        Task<AnimalViewModel?> GetAnimalDetailsAsync(int id);
+        Task<AnimalDetailsViewModel?> GetAnimalDetailsAsync(int id);
 
         Task<AnimalViewModel?> GetAnimalUpdateAsync(int id);
         Task<List<SelectListItem>> GetSelectListItemsAsync();
