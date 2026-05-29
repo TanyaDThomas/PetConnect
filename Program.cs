@@ -5,6 +5,7 @@ using PetConnect.Application.Services;
 using PetConnect.Domain.Contracts;
 using PetConnect.Infrastructure.Customs;
 using PetConnect.Infrastructure.Identity;
+using PetConnect.Infrastructure.Middleware;
 using PetConnect.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -78,9 +79,19 @@ builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IUserShelterQueryService, UserShelterQueryService>();
 builder.Services.AddScoped<IUserShelterService, UserShelterService>();
 
-
+//Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+};
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 using (var scope = app.Services.CreateScope())
 {
@@ -115,10 +126,15 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
+// MVC routes (views)
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+
+// API routes (attribute-based)
+app.MapControllers();
 
 app.MapRazorPages();
 
