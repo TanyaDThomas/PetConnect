@@ -1,14 +1,18 @@
 ﻿
+using Azure.Core;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using PetConnect.Application.Services.DTOs;
 using PetConnect.Domain.Contracts;
 using PetConnect.Domain.Entities;
 using PetConnect.Domain.Enums;
 using PetConnect.Infrastructure.Identity;
 using PetConnect.Infrastructure.Persistence;
 using PetConnect.ViewModels;
+using System.Collections;
 
 
 namespace PetConnect.Application.Services
@@ -201,79 +205,49 @@ namespace PetConnect.Application.Services
         .ToList()
             };
 
-            //return new AnimalDetailsViewModel
-            //{
-            //    Id = animal.Id,
-            //    ImagePath = animal.ImagePath,
-
-            //    ShelterId = animal.ShelterId,
-            //    AnimalTypeId = animal.AnimalTypeId,
-
-            //    ShelterName = animal.Shelter?.Name ?? "",
-            //    AnimalTypeName = animal.AnimalType?.Name ?? "",
-
-            //    Name = animal.Name,
-            //    DateOfBirth = animal.DateOfBirth,
-            //    Age = animal.DateOfBirth.HasValue ? CalculateAge(animal.DateOfBirth.Value) : 0,
-            //    Color = animal.Color,
-            //    AdoptionFee = animal.AdoptionFee,
-            //    Breed = animal.Breed,
-            //    IsVaccinated = animal.IsVaccinated,
-            //    HasSpecialCareNeeds = animal.HasSpecialCareNeeds,
-            //    HasSpecialDiet = animal.HasSpecialDiet,
-            //    IsAdopted = animal.IsAdopted,
-            //    IsActive = animal.IsActive,
-            //    RecentNotes = notes,
-
-            //    Attributes = animal.AnimalAttributes
-            //    .Select(aa => new AnimalAttributeVm
-            //    {
-            //        Name = aa.AttributeDefinition.Name,
-            //        Value = aa.Value ?? ""
-            //    })
-            //    .ToList()
-            //    };
+         
         }
 
 
-        public async Task<AnimalViewModel?> UpdateAsync(int id)
-        {
-            var animal = await _context.Animals
-                .AsNoTracking()
-                .Include(a => a.AnimalType)
-                .Include(a => a.AnimalAttributes)
-                    .ThenInclude(aa => aa.AttributeDefinition)
-                .FirstOrDefaultAsync(a => a.Id == id);
+       
+        //public async Task<AnimalViewModel?> UpdateAsync(int id)
+        //{
+        //    var animal = await _context.Animals
+        //        .AsNoTracking()
+        //        .Include(a => a.AnimalType)
+        //        .Include(a => a.AnimalAttributes)
+        //            .ThenInclude(aa => aa.AttributeDefinition)
+        //        .FirstOrDefaultAsync(a => a.Id == id);
 
-            if (animal == null)
-                return null;
+        //    if (animal == null)
+        //        return null;
 
-            return new AnimalViewModel
-            {
-                Id = animal.Id,
-                ShelterId = animal.ShelterId,
-                AnimalTypeId = animal.AnimalTypeId,
-                Name = animal.Name,
-                DateOfBirth = animal.DateOfBirth,
-                Breed = animal.Breed,
-                Color = animal.Color,
-                AdoptionFee = animal.AdoptionFee,
-                IsVaccinated = animal.IsVaccinated,
-                HasSpecialCareNeeds = animal.HasSpecialCareNeeds,
-                HasSpecialDiet = animal.HasSpecialDiet,
-                IsActive = animal.IsActive,
-                IsAdopted = animal.IsAdopted,
+        //    return new AnimalViewModel
+        //    {
+        //        Id = animal.Id,
+        //        ShelterId = animal.ShelterId,
+        //        AnimalTypeId = animal.AnimalTypeId,
+        //        Name = animal.Name,
+        //        DateOfBirth = animal.DateOfBirth,
+        //        Breed = animal.Breed,
+        //        Color = animal.Color,
+        //        AdoptionFee = animal.AdoptionFee,
+        //        IsVaccinated = animal.IsVaccinated,
+        //        HasSpecialCareNeeds = animal.HasSpecialCareNeeds,
+        //        HasSpecialDiet = animal.HasSpecialDiet,
+        //        IsActive = animal.IsActive,
+        //        IsAdopted = animal.IsAdopted,
 
-                Attributes = animal.AnimalAttributes
-                    .Select(a => new AnimalAttributeVm
-                    {
-                        AttributeDefinitionId = a.AttributeDefinitionId,
-                        Name = a.AttributeDefinition.Name,
-                        Value = a.Value
-                    })
-                    .ToList()
-            };
-        }
+        //        Attributes = animal.AnimalAttributes
+        //            .Select(a => new AnimalAttributeVm
+        //            {
+        //                AttributeDefinitionId = a.AttributeDefinitionId,
+        //                Name = a.AttributeDefinition.Name,
+        //                Value = a.Value
+        //            })
+        //            .ToList()
+        //    };
+        //}
 
         public async Task<AnimalViewModel?> GetAnimalUpdateAsync(int id)
         {
@@ -400,16 +374,32 @@ namespace PetConnect.Application.Services
                 .ToListAsync();
         }
 
+        //GET ANIMAL SEARCH FILTERS SITE
         public async Task<IEnumerable<Animal>> SearchAsync(AnimalSearchFilter filter)
         {
             var query = _context.Animals
                 .AsNoTracking()
+                .Include(a => a.Shelter)
                 .Where(a => a.IsActive);
+
+            if (!string.IsNullOrEmpty(filter.City))
+            {
+                query = query.Where(a =>
+                    a.Shelter != null &&
+                    a.Shelter.City == filter.City);
+            }
+
+            if (!string.IsNullOrEmpty(filter.State))
+            {
+                query = query.Where(a =>
+                    a.Shelter != null &&
+                    a.Shelter.State == filter.State);
+            }
 
             if (!string.IsNullOrEmpty(filter.Name))
                 query = query.Where(a => a.Name.Contains(filter.Name));
 
-        
+
             if (filter.AnimalTypeId.HasValue)
             {
                 query = query.Where(a => a.AnimalTypeId == filter.AnimalTypeId.Value);
@@ -443,6 +433,67 @@ namespace PetConnect.Application.Services
         }
 
 
+        //GET ANIMAL SEARCH FILTERS API
+
+        public async Task<IEnumerable<AnimalDto>> ApiSearchAsync(AnimalApiSearchFilter filter)
+        {
+            var query = _context.Animals
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Include(a => a.Images)
+                .Include(a => a.Shelter)
+                .Where(a => a.IsActive);
+
+            if (!string.IsNullOrWhiteSpace(filter.City))
+                query = query.Where(a => a.Shelter.City == filter.City);
+
+            if (!string.IsNullOrWhiteSpace(filter.State))
+                query = query.Where(a => a.Shelter.State == filter.State);
+
+            if (!string.IsNullOrWhiteSpace(filter.ShelterName))
+                query = query.Where(a => a.Shelter.Name == filter.ShelterName);
+
+            if (filter.AnimalTypeId.HasValue)
+                query = query.Where(a => a.AnimalTypeId == filter.AnimalTypeId);
+
+            if (!string.IsNullOrWhiteSpace(filter.Breed))
+                query = query.Where(a => a.Breed == filter.Breed);
+
+            if (!string.IsNullOrWhiteSpace(filter.Name))
+                query = query.Where(a => a.Name == filter.Name);
+
+            if (filter.HasSpecialCareNeeds.HasValue)
+                query = query.Where(a => a.HasSpecialCareNeeds == filter.HasSpecialCareNeeds);
+
+            var animals = await query.ToListAsync();
+
+            if (filter.Age > 0)
+            {
+                animals = animals
+                    .Where(a => a.DateOfBirth.HasValue &&
+                                CalculateAge(a.DateOfBirth.Value) == filter.Age)
+                    .ToList();
+            }
+
+            return animals.Select(a => new AnimalDto
+            {
+                ImagePath = a.ImagePath,
+                Images = a.Images
+                    .Select(i => $"/images/animals/{i.FileName}")
+                    .ToList(),
+                Name = a.Name,
+                Breed = a.Breed,
+                City = a.Shelter.City,
+                State = a.Shelter.State,
+                HasSpecialCareNeeds = a.HasSpecialCareNeeds,
+                Age = a.DateOfBirth.HasValue
+                    ? CalculateAge(a.DateOfBirth.Value)
+                    : 0
+            }).ToList();
+        }
+
+
+        // GET Shelter list dropdown
         public async Task<List<SelectListItem>> GetSelectListBySheltersAsync(List<int> shelterIds)
         {
             return await _context.Animals
@@ -455,5 +506,9 @@ namespace PetConnect.Application.Services
                 })
                 .ToListAsync();
         }
+
+
+ 
+
     }
 }

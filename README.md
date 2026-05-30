@@ -4,6 +4,8 @@ PetConnect is a multi-location animal shelter management application built with 
 
 The application manages shelters, animals, adopters, adoptions, payments, staff, and administrative workflows while enforcing role-based access control across multiple shelter locations.
 
+---
+
 ## Project Overview
 
 PetConnect was designed to simulate real-world shelter operations through a structured web application that emphasizes:
@@ -16,6 +18,8 @@ PetConnect was designed to simulate real-world shelter operations through a stru
 - Dashboard reporting and analytics
 
 The system supports multiple shelters across different locations, each with its own staff, managers, animals, adopters, payments, and adoption records.
+
+---
 
 ## Screenshots
 
@@ -30,6 +34,11 @@ The system supports multiple shelters across different locations, each with its 
 
 ### Admin Management
 ![Admin Management](images/admin.png)
+
+### Swagger 
+![Swagger Animal Api](images/Swagger.png)
+
+---
 
 ## Features
 
@@ -64,6 +73,8 @@ Full system access including:
 - Global reporting and dashboard access
 - Access to all shelter data
 
+---
+
 ## Permission Overview
 
 | Feature | Staff | Manager | Admin |
@@ -74,6 +85,8 @@ Full system access including:
 | Manage Staff | No | Yes | Yes |
 | Manage Shelters | No | No | Yes |
 | Manage Animal Types | No | No | Yes |
+
+---
 
 ## Core Functionality
 
@@ -127,6 +140,8 @@ Search and filtering functionality implemented for:
 - Adopters
 - Adoptions
 
+---
+
 ## Architecture
 
 The application follows a layered architecture inspired by Clean Architecture concepts.
@@ -152,17 +167,23 @@ The application follows a layered architecture inspired by Clean Architecture co
 - SQL Server persistence
 - Data access implementation
 
+---
+
 ## Technology Stack
 
 - ASP.NET Core MVC
 - C#
 - Entity Framework Core
 - SQL Server
-- ASP.NET Core Identity for authentication / authorization
+- ASP.NET Core Web API (Animal Listing API)
+- ASP.NET Core Identity 
 - LINQ
 - Bootstrap 5
 - Razor Views
-- Dependency Injection
+- Swagger (OpenAPI)
+
+
+---
 
 ## Testing
 
@@ -177,25 +198,20 @@ Manual QA testing was performed for:
 
 See `TESTING.md` for detailed test cases and known issues.
 
+---
+
 ## Known Limitations
 
-Current known issues and planned improvements are documented in the testing documentation.
+Current known issues and planned improvements:
 
-Areas planned for future enhancement include:
-- Additional responsive design improvements
-- Real-time validation feedback
-- Pagination for large datasets
-- Expanded automated testing coverage
+- Pagination not yet implemented for API or UI
+- Limited automated testing coverage
+- Image storage currently file-based (not cloud hosted yet)
+- Dynamic attribute filtering not yet exposed in API
+
+---
 
 ## Deployment
-
-<<<<<<< HEAD
-Deployment is currently in progress.
-
-Planned hosting architecture:
-- ASP.NET Core MVC application hosted on AWS
-- SQL Server database hosted separately
-
 
 Deployment (Planned Improvements)
 
@@ -203,22 +219,27 @@ Deployment (Planned Improvements)
 - Future migration of image storage to Amazon S3 for scalable media handling
 - Potential use of AWS RDS for managed SQL Server hosting
 
+---
 
 ## Learning Goals Demonstrated
 
 This project demonstrates practical experience with:
 
-- ASP.NET Core MVC application development
+- ASP.NET Core MVC development
+- ASP.NET Core Web API design
 - Entity Framework Core
-- Authentication and authorization
+- DTO-based API architecture
+- Authentication & authorization
 - Role-based access control
 - Service-layer architecture
-- Query/write service separation
+- Clean separation of concerns
 - Relational database design
+- REST API development with Swagger
 - Dashboard and reporting systems
 - Manual QA testing practices
 - File upload and media management systems
 
+---
 
 ## About
 

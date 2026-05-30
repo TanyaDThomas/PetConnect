@@ -1,4 +1,4 @@
-﻿using PetConnect.Application.Services;
+﻿using PetConnect.Application.Services.DTOs;
 using PetConnect.Domain.Entities;
 
 namespace PetConnect.ViewModels

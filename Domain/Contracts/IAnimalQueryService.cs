@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using PetConnect.Application.Services;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using PetConnect.Application.Services.DTOs;
 using PetConnect.Domain.Entities;
 using PetConnect.ViewModels;
 
@@ -20,5 +21,11 @@ namespace PetConnect.Domain.Contracts
         Task<decimal?> GetAnimalFeeAsync(int animalId);
 
         Task<List<SelectListItem>> GetSelectListBySheltersAsync(List<int> shelterIds);
+
+
+        Task<IEnumerable<AnimalDto>> ApiSearchAsync(AnimalApiSearchFilter filter);
+
+
+
     }
 }

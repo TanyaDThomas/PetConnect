@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using PetConnect.Application.Services;
+using PetConnect.Application.Services.DTOs;
 using PetConnect.Domain.Contracts;
 using PetConnect.Infrastructure.Identity;
 using PetConnect.ViewModels;

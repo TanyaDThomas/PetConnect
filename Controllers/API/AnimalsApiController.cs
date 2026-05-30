@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
+using PetConnect.Application.Services;
+using PetConnect.Application.Services.DTOs;
 using PetConnect.Domain.Contracts;
+using static System.Net.WebRequestMethods;
 
 namespace PetConnect.Controllers.API
 {
@@ -14,10 +18,16 @@ namespace PetConnect.Controllers.API
             _animalQueryService = animalQueryService;
         }
 
-        [HttpGet]
-        public IActionResult Get()
+        //GET ANIMALS API
+        [HttpGet("Search")]
+        public async Task<IActionResult> AnimalSearchAsync([FromQuery] AnimalApiSearchFilter filter)
         {
-            return Ok();
+            var result = await _animalQueryService.ApiSearchAsync(filter);
+            return Ok(result);
+   
         }
+
+     
     }
+    
 }
