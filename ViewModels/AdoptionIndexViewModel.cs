@@ -1,4 +1,5 @@
 ﻿using PetConnect.Application.Services;
+using PetConnect.Domain.Enums;
 
 namespace PetConnect.ViewModels
 {
@@ -9,6 +10,8 @@ namespace PetConnect.ViewModels
 
         public int FilteredCount { get; set; }
         public int TotalCount { get; set; }
+
+        public AdoptionStatus? Status { get; set; }
 
     }
 }

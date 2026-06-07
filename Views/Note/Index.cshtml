@@ -4,8 +4,7 @@
         ViewData["Title"] = "List of Notes";
     }
 
-    <h2>List of Notes</h2>
-    <hr />
+
 
     
 <div class="container">
@@ -45,23 +44,7 @@
             </div>
         </div>
 
-        <!-- Species Filter -->
-        <div class="card-body pt-0">
-            <div class="d-flex align-items-center gap-3 mb-4">
-                <span class="filter-label">Status:</span>
-                <div class="d-flex flex-wrap gap-2">
-                    <button class="pill-btn species-all active">All</button>
-                    <button class="pill-btn btn-light text-dark">Active</button>
-                    <button class="pill-btn btn-light text-dark">Pending Review</button>
-                    <button class="pill-btn btn-light text-dark">Flagged</button>
-                    <button class="pill-btn btn-light text-dark">Inactive</button>
-                </div>
-
-                
-
-            </div>
-
-        </div>
+       
 
     </div>
 
@@ -70,8 +53,14 @@
 <hr />
 
 
-<table class="table table-striped">
+
+
+<div class="container">
+
+    <div class="table-container">
+        <table class="table table-hover custom-table align-middle">
     <thead>
+
         <tr>
             <th>Entity Name</th>
             <th>Entity Type</th>
@@ -108,7 +97,8 @@
         }
 
     </tbody>
-    <tfoot></tfoot>
-</table>
-
+     <tfoot></tfoot>
+        </table>
+    </div>
+</div>
 

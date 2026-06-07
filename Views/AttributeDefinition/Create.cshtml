@@ -1,68 +1,67 @@
-﻿@model PetConnect.Domain.Entities.AttributeDefinition
+﻿
+@model PetConnect.Domain.Entities.AttributeDefinition
 @using PetConnect.Domain.Enums
 
 @{
-    ViewData["Title"] = "Create a New Animal Attribute";
+    ViewData["Title"] = "Create Animal Attribute";
 }
 
-<h2>Create a New Animal Attribute</h2>
-<hr />
+<div class="container">
 
-<form asp-action="Create">
-    @Html.AntiForgeryToken()
-    <div asp-validation-summary="All" class="text-danger"></div>
+    <h2>Create Animal Attribute</h2>
+    <hr />
 
+    <form asp-action="Create" method="post">
 
-    <div class="row mb-3 d-flex">
-   
-        <div class="col-sm-6">
-            <label asp-for="DataType" class="form-label"></label>
+        @Html.AntiForgeryToken()
 
-            <select asp-for="DataType"
-                    asp-items="Html.GetEnumSelectList<AttributeDataType>()"
-                    class="form-select">
-                <option value="">-- Select Data Type --</option>
-            </select>
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-            <span asp-validation-for="DataType" class="text-danger"></span>
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Name" class="form-label"></label>
+
+                <input asp-for="Name" class="form-control" />
+
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="DataType" class="form-label"></label>
+
+                <select asp-for="DataType"
+                        asp-items="Html.GetEnumSelectList<AttributeDataType>()"
+                        class="form-select">
+                    <option value="">-- Select Data Type --</option>
+                </select>
+
+                <span asp-validation-for="DataType" class="text-danger"></span>
+            </div>
+
         </div>
 
-        <div class="col-sm-6">
-            <label asp-for="Name" class="form-label"></label>
-            <input asp-for="Name" class="for-control" />
+        <div class="mt-3">
 
-
-            <span asp-validation-for="DataType" class="text-danger"></span>
-        </div>
-    </div>
-
-    <div class="mt-3">
-     
             <button type="submit"
                     class="btn btn-primary"
-                    id="submitBtn"
                     onclick="disableButton(this)">
-                Save Animal
+                Save Attribute
             </button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-    </div>
-</form>
 
+            <a asp-action="Index"
+                   class="btn btn-secondary">
+                Cancel
+            </a>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
 }
-
-<script>
-    function disableButton(button) {
-
-        button.disabled = true;
-
-        button.innerText = "Saving...";
-
-        button.form.submit();
-    }
-</script>
 

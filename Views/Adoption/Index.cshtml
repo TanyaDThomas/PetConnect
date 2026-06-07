@@ -20,7 +20,7 @@
             </div>
             <a asp-action="Create" class="btn btn-add d-flex align-items-center gap-2">
                 <i class="fas fa-plus"></i>
-                Add Animal
+                Add Adoptions
             </a>
         </div>
  
@@ -74,35 +74,7 @@
 
             </div>
 
-            <!-- STATUS PILLS -->
-            <div class="d-flex gap-2 mt-3">
-
-                <button type="submit" name="Status" value=""
-                        class="pill-btn @(Model.Filter.Status == null ? "active" : "")">
-                    All
-                </button>
-
-                <button type="submit" name="Status" value="Pending"
-                        class="pill-btn @(Model.Filter.Status == AdoptionStatus.Pending ? "active" : "")">
-                    Pending
-                </button>
-
-                <button type="submit" name="Status" value="Approved"
-                        class="pill-btn @(Model.Filter.Status == AdoptionStatus.Approved ? "active" : "")">
-                    Approved
-                </button>
-
-                <button type="submit" name="Status" value="Completed"
-                        class="pill-btn @(Model.Filter.Status == AdoptionStatus.Completed ? "active" : "")">
-                    Completed
-                </button>
-
-                <button type="submit" name="Status" value="Cancelled"
-                        class="pill-btn @(Model.Filter.Status == AdoptionStatus.Cancelled ? "active" : "")">
-                    Cancelled
-                </button>
-
-            </div>
+         
 
         </div>
 
@@ -164,6 +136,7 @@
                             </td>
                         </tr>
                     }
+
                 </tbody>
                 <tfoot></tfoot>
             </table>

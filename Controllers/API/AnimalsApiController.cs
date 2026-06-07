@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using PetConnect.Application.Services;
 using PetConnect.Application.Services.DTOs;
 using PetConnect.Domain.Contracts;
+using PetConnect.Domain.Entities;
+using PetConnect.ViewModels;
 using static System.Net.WebRequestMethods;
 
 namespace PetConnect.Controllers.API
@@ -25,6 +27,17 @@ namespace PetConnect.Controllers.API
             var result = await _animalQueryService.ApiSearchAsync(filter);
             return Ok(result);
    
+        }
+
+        // GET ANIMAL BY ID API
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
+        {
+            var animal = await _animalQueryService.GetByIdApiAsync(id);
+            if (animal == null) return NotFound();
+
+            return Ok(animal);
         }
 
      

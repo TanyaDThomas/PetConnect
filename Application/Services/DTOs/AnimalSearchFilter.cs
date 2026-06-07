@@ -4,9 +4,11 @@ namespace PetConnect.Application.Services.DTOs
 {
     public class AnimalSearchFilter
     {
+     
         public string? Name { get; set; }
 
         public int? AnimalTypeId { get; set; }
+        public string? AnimalTypeName { get; set;  }
         public string? Species { get; set; }
         public string? Breed { get; set; }
 

@@ -55,28 +55,6 @@ namespace PetConnect.Application.Services
                 ShelterName = a.Shelter?.Name ?? ""
             }).ToList();
 
-            //var userShelterIds = await _context.UserShelters
-            //    .Where(us => us.UserId == userId && us.IsActive)
-            //    .Select(us => us.ShelterId)
-            //    .ToListAsync();
-
-
-            //var adopters = await _context.Adopters
-            //    .AsNoTracking()
-            //    .Include(a => a.Shelter)
-            //    .Where(a => a.IsActive)
-            //    .Where(a => userShelterIds.Contains(a.ShelterId))
-            //    .ToListAsync();
-
-            //return adopters.Select(a => new AdopterListViewModel
-            //{
-            //    Id = a.Id,
-            //    FullName = $"{a.FirstName} {a.LastName}",
-            //    PhoneNumber = a.PhoneNumber,
-            //    Email = a.Email,
-            //    ShelterName = a.Shelter?.Name ?? ""
-
-            //}).ToList();
         }
 
         //GET LIST FOR DETAILS

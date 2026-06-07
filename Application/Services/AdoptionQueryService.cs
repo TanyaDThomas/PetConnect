@@ -7,6 +7,7 @@ using PetConnect.Domain.Enums;
 using PetConnect.Infrastructure.Identity;
 using PetConnect.Infrastructure.Persistence;
 using PetConnect.ViewModels;
+using System.Net.NetworkInformation;
 using static Azure.Core.HttpHeader;
 
 namespace PetConnect.Application.Services
@@ -42,6 +43,8 @@ namespace PetConnect.Application.Services
             var user = await _userManager.FindByIdAsync(userId);
             var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
 
+
+
             var query = _context.Adoptions
                 .AsNoTracking()
                 .AsSplitQuery()
@@ -50,6 +53,8 @@ namespace PetConnect.Application.Services
                 .Include(a => a.Animal)
                     .ThenInclude(animal => animal.AnimalType)
                 .Where(a => a.IsActive);
+
+          
 
             if (!isAdmin)
             {
@@ -73,40 +78,7 @@ namespace PetConnect.Application.Services
                 AdoptionDate = a.AdoptionDate,
                 Status = a.Status
             }).ToList();
-            //        var user = await _userManager.FindByIdAsync(userId);
-            //        var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
 
-            //        if (!isAdmin)
-            //        {
-            //            var userShelterIds = await _context.UserShelters
-            //            .Where(us => us.UserId == userId && us.IsActive)
-            //            .Select(us => us.ShelterId)
-            //            .ToListAsync();
-
-            //        }
-
-            //        var adoptions = await _context.Adoptions
-            //                .AsNoTracking()
-            //                .AsSplitQuery()
-            //                .Include(a => a.Shelter)
-            //                .Include(a => a.Adopter)
-            //                .Include(a => a.Animal)
-            //                    .ThenInclude(animal => animal.AnimalType)
-            //                .Where(a => a.IsActive)
-            //                .Where(a => userShelterIds.Contains(a.ShelterId))
-            //                .ToListAsync();
-
-            //        return adoptions.Select(a => new AdoptionListViewModel
-            //        {
-            //            Id = a.Id,
-            //            ShelterName = a.Shelter?.Name ?? "",
-            //            AdopterName = a.Adopter?.FullName ?? "",
-            //            AnimalType = a.Animal?.AnimalType?.Name ?? "",
-            //            AnimalName = a.Animal?.Name ?? "",
-            //            AdoptionDate = a.AdoptionDate,
-            //            Status = a.Status
-
-            //}).ToList();
         }
 
         public async Task<AdoptionViewModel?> GetAdoptionForUpdateAsync(int id)

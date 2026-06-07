@@ -125,18 +125,7 @@ namespace PetConnect.Controllers
         }
 
 
-        //public async Task<IActionResult> Create()
-        //{
-        //    var viewModel = new AdoptionViewModel
-        //    {
-        //        Shelters = await _shelterQueryService.GetSelectListItemsAsync(),
-        //        Adopters = await _adopterQueryService.GetSelectListItemsAsync(),
-        //        Animals = await _animalQueryService.GetSelectListItemsAsync(),
-
-        //    };
-
-        //    return View(viewModel);
-        //}
+   
 
         //POST Create Adoption
         [HttpPost]

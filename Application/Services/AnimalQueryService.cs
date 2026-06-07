@@ -28,7 +28,7 @@ namespace PetConnect.Application.Services
             _userManager = userManager;
         }
 
-        private int CalculateAge(DateTime dob)
+        public int CalculateAge(DateTime dob)
         {
             var today = DateTime.UtcNow;
             var age = today.Year - dob.Year;
@@ -209,45 +209,6 @@ namespace PetConnect.Application.Services
         }
 
 
-       
-        //public async Task<AnimalViewModel?> UpdateAsync(int id)
-        //{
-        //    var animal = await _context.Animals
-        //        .AsNoTracking()
-        //        .Include(a => a.AnimalType)
-        //        .Include(a => a.AnimalAttributes)
-        //            .ThenInclude(aa => aa.AttributeDefinition)
-        //        .FirstOrDefaultAsync(a => a.Id == id);
-
-        //    if (animal == null)
-        //        return null;
-
-        //    return new AnimalViewModel
-        //    {
-        //        Id = animal.Id,
-        //        ShelterId = animal.ShelterId,
-        //        AnimalTypeId = animal.AnimalTypeId,
-        //        Name = animal.Name,
-        //        DateOfBirth = animal.DateOfBirth,
-        //        Breed = animal.Breed,
-        //        Color = animal.Color,
-        //        AdoptionFee = animal.AdoptionFee,
-        //        IsVaccinated = animal.IsVaccinated,
-        //        HasSpecialCareNeeds = animal.HasSpecialCareNeeds,
-        //        HasSpecialDiet = animal.HasSpecialDiet,
-        //        IsActive = animal.IsActive,
-        //        IsAdopted = animal.IsAdopted,
-
-        //        Attributes = animal.AnimalAttributes
-        //            .Select(a => new AnimalAttributeVm
-        //            {
-        //                AttributeDefinitionId = a.AttributeDefinitionId,
-        //                Name = a.AttributeDefinition.Name,
-        //                Value = a.Value
-        //            })
-        //            .ToList()
-        //    };
-        //}
 
         public async Task<AnimalViewModel?> GetAnimalUpdateAsync(int id)
         {
@@ -374,6 +335,20 @@ namespace PetConnect.Application.Services
                 .ToListAsync();
         }
 
+        // GET Shelter list dropdown
+        public async Task<List<SelectListItem>> GetSelectListBySheltersAsync(List<int> shelterIds)
+        {
+            return await _context.Animals
+                .AsNoTracking()
+                .Where(a => a.IsActive && shelterIds.Contains(a.ShelterId))
+                .Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Name
+                })
+                .ToListAsync();
+        }
+
         //GET ANIMAL SEARCH FILTERS SITE
         public async Task<IEnumerable<Animal>> SearchAsync(AnimalSearchFilter filter)
         {
@@ -441,6 +416,7 @@ namespace PetConnect.Application.Services
                 .AsNoTracking()
                 .AsSplitQuery()
                 .Include(a => a.Images)
+                .Include(a => a.AnimalType)
                 .Include(a => a.Shelter)
                 .Where(a => a.IsActive);
 
@@ -456,6 +432,10 @@ namespace PetConnect.Application.Services
             if (filter.AnimalTypeId.HasValue)
                 query = query.Where(a => a.AnimalTypeId == filter.AnimalTypeId);
 
+            if (!string.IsNullOrWhiteSpace(filter.AnimalTypeName))
+                query = query.Where(a => a.AnimalType.Name == filter.AnimalTypeName);
+
+
             if (!string.IsNullOrWhiteSpace(filter.Breed))
                 query = query.Where(a => a.Breed == filter.Breed);
 
@@ -464,6 +444,8 @@ namespace PetConnect.Application.Services
 
             if (filter.HasSpecialCareNeeds.HasValue)
                 query = query.Where(a => a.HasSpecialCareNeeds == filter.HasSpecialCareNeeds);
+
+
 
             var animals = await query.ToListAsync();
 
@@ -477,11 +459,13 @@ namespace PetConnect.Application.Services
 
             return animals.Select(a => new AnimalDto
             {
+                Id = a.Id,
                 ImagePath = a.ImagePath,
                 Images = a.Images
                     .Select(i => $"/images/animals/{i.FileName}")
                     .ToList(),
                 Name = a.Name,
+                AnimalTypeName = a.AnimalType?.Name ?? "Unknown",
                 Breed = a.Breed,
                 City = a.Shelter.City,
                 State = a.Shelter.State,
@@ -493,22 +477,37 @@ namespace PetConnect.Application.Services
         }
 
 
-        // GET Shelter list dropdown
-        public async Task<List<SelectListItem>> GetSelectListBySheltersAsync(List<int> shelterIds)
+        // GET API ANIMAL BY ID
+        public async Task<AnimalDetailsDto?> GetByIdApiAsync(int id)
         {
-            return await _context.Animals
-                .AsNoTracking()
-                .Where(a => a.IsActive && shelterIds.Contains(a.ShelterId))
-                .Select(a => new SelectListItem
-                {
-                    Value = a.Id.ToString(),
-                    Text = a.Name
-                })
-                .ToListAsync();
+            var animal = await _context.Animals
+                 .Include(a => a.Images)
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            if (animal == null)
+                return null;
+
+            var result = new AnimalDetailsDto
+            {
+                Id = animal.Id,
+                ShelterId = animal.ShelterId,
+                AnimalTypeId = animal.AnimalTypeId,
+                Name = animal.Name,
+                Age = animal.DateOfBirth.HasValue ? CalculateAge(animal.DateOfBirth.Value) : 0,
+                Color = animal.Color,
+                AdoptionFee = animal.AdoptionFee,
+                Breed = animal.Breed,
+                IsVaccinated = animal.IsVaccinated,
+                HasSpecialCareNeeds = animal.HasSpecialCareNeeds,
+                HasSpecialDiet = animal.HasSpecialDiet,
+                ImagePath = animal.ImagePath,
+                Images = animal.Images.Select(i => i.FileName).ToList()
+            };
+
+            return result;
         }
 
 
- 
-
     }
+
 }

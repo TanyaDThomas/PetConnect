@@ -24,6 +24,7 @@ namespace PetConnect.Domain.Contracts
 
 
         Task<IEnumerable<AnimalDto>> ApiSearchAsync(AnimalApiSearchFilter filter);
+        Task<AnimalDetailsDto?> GetByIdApiAsync(int id);
 
 
 
