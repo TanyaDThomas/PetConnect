@@ -4,11 +4,11 @@
 [![Admin](https://img.shields.io/badge/Staff_Portal-Live-blue)](https://petconnectclientportal-cdapepedgdbwd0ad.centralus-01.azurewebsites.net)
 [![Azure](https://img.shields.io/badge/Hosted_on-Azure-0078D4)](https://azure.microsoft.com)
 
-PetConnect is a multi-location animal shelter management application built with ASP.NET Core MVC using a layered, service-based architecture inspired by Clean Architecture principles.
+PetConnect is a multi-location animal shelter management application built with ASP.NET Core MVC using a layered, service-based architecture inspired by Clean Architecture principles. Currently deployed on Azure along with the frontend and database.
 
 The application manages shelters, animals, adopters, adoptions, payments, staff, and administrative workflows while enforcing role-based access control across multiple shelter locations.
 
-To see customer website that consumes animal api, please go see : [Pet Connect Frontend Customer website Github](https://github.com/TanyaDThomas/PetConnectFrontend.git)
+To see customer website github that consumes animal api, please go see : [Pet Connect Frontend Customer website Github](https://github.com/TanyaDThomas/PetConnectFrontend.git)
 
 ---
 
@@ -224,16 +224,6 @@ Current known issues and planned improvements:
 - Limited automated testing coverage
 - Image storage currently file-based (not cloud hosted yet)
 - Dynamic attribute filtering not yet exposed in API
-
----
-
-## Deployment
-
-Deployment (Planned Improvements)
-
-- Planned cloud deployment using AWS 
-- Future migration of image storage to Amazon S3 for scalable media handling
-- Potential use of AWS RDS for managed SQL Server hosting
 
 ---
 
