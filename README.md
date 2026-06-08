@@ -1,8 +1,14 @@
 # PetConnect  
 
+[![Website](https://img.shields.io/badge/Customer_Site-Live-brightgreen)](https://petconnectfrontend-b8dyfah2bef7fpcp.centralus-01.azurewebsites.net)
+[![Admin](https://img.shields.io/badge/Staff_Portal-Live-blue)](https://petconnectclientportal-cdapepedgdbwd0ad.centralus-01.azurewebsites.net)
+[![Azure](https://img.shields.io/badge/Hosted_on-Azure-0078D4)](https://azure.microsoft.com)
+
 PetConnect is a multi-location animal shelter management application built with ASP.NET Core MVC using a layered, service-based architecture inspired by Clean Architecture principles.
 
 The application manages shelters, animals, adopters, adoptions, payments, staff, and administrative workflows while enforcing role-based access control across multiple shelter locations.
+
+To see customer website that consumes animal api, please go see : [Pet Connect Frontend Customer website Github](https://github.com/TanyaDThomas/PetConnectFrontend.git)
 
 ---
 
@@ -18,6 +24,16 @@ PetConnect was designed to simulate real-world shelter operations through a stru
 - Dashboard reporting and analytics
 
 The system supports multiple shelters across different locations, each with its own staff, managers, animals, adopters, payments, and adoption records.
+
+---
+
+## 🚀 Live Demos
+
+- **Customer Site (Public):** [https://petconnectfrontend-b8dyfah2bef7fpcp.centralus-01.azurewebsites.net](https://petconnectfrontend-b8dyfah2bef7fpcp.centralus-01.azurewebsites.net)
+- **Staff Portal (Login Required):** [https://petconnectclientportal-cdapepedgdbwd0ad.centralus-01.azurewebsites.net](https://petconnectclientportal-cdapepedgdbwd0ad.centralus-01.azurewebsites.net)
+
+> **Demo Credentials:** (if you create a demo account)
+> Ask me for demo credentials
 
 ---
 
