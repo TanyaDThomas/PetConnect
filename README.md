@@ -27,13 +27,19 @@ The system supports multiple shelters across different locations, each with its 
 
 ---
 
-## 🚀 Live Demos
+## Live Demos
+The application is hosted on Azure's **Free tier**, which includes:
+- Automatic idle timeout after ~20 minutes of inactivity
+- Database auto-pause after ~1 hour
 
-- **Customer Site (Public):** [https://petconnectfrontend-b8dyfah2bef7fpcp.centralus-01.azurewebsites.net](https://petconnectfrontend-b8dyfah2bef7fpcp.centralus-01.azurewebsites.net)
-- **Staff Portal (Login Required):** [https://petconnectclientportal-cdapepedgdbwd0ad.centralus-01.azurewebsites.net](https://petconnectclientportal-cdapepedgdbwd0ad.centralus-01.azurewebsites.net)
+**To see a live demo:** Please reach out to me and I'll wake the site up for you. Once active, everything runs smoothly.
 
-> **Demo Credentials:** (if you create a demo account)
-> Ask me for demo credentials
+**[View Demo Site](
+https://petconnectfrontend-b8dyfah2bef7fpcp.centralus-01.azurewebsites.net)**
+
+**[Staff Portal](
+https://petconnectclientportal-cdapepedgdbwd0ad.centralus-01.azurewebsites.net)**
+> Demo credentials available upon request
 
 ---
 
