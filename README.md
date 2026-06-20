@@ -49,14 +49,18 @@ https://petconnectclientportal-cdapepedgdbwd0ad.centralus-01.azurewebsites.net)*
 ![Dashboard](images/dashboard.png)
 
 ### Animal Management
+![Animal Management](https://github.com/TanyaDThomas/PetConnect/blob/main/images/staff.gif?raw=true)
+
 ![Animal Management](images/animals.png)
 
 ### Adoption Workflow
 ![Adoption](https://github.com/TanyaDThomas/PetConnect/blob/main/images/adoption.gif?raw=true)
+
 ![Adoption Workflow](images/adoptions.png)
 
 ### Admin Management
-![Admin](https://github.com/TanyaDThomas/PetConnect/blob/main/images/Admin.gif?raw=true)
+![Admin](https://github.com/TanyaDThomas/PetConnect/blob/main/images/admin.gif?raw=true)
+
 ![Admin Management](images/admin.png)
 
 ### Swagger 
