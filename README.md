@@ -1,7 +1,6 @@
 # PetConnect  
-
-[![Website](https://img.shields.io/badge/Customer_Site-Live-brightgreen)](https://petconnectfrontend-b8dyfah2bef7fpcp.centralus-01.azurewebsites.net)
-[![Admin](https://img.shields.io/badge/Staff_Portal-Live-blue)](https://petconnectclientportal-cdapepedgdbwd0ad.centralus-01.azurewebsites.net)
+[![Website](https://img.shields.io/badge/Customer_Site-Live-brightgreen)](https://youtu.be/U_MHaU1u62k)
+[![Admin](https://img.shields.io/badge/Staff_Portal-Live-blue)](https://github.com/TanyaDThomas/PetConnect)
 [![Azure](https://img.shields.io/badge/Hosted_on-Azure-0078D4)](https://azure.microsoft.com)
 
 PetConnect is a multi-location animal shelter management application built with ASP.NET Core MVC using a layered, service-based architecture inspired by Clean Architecture principles. Currently deployed on Azure along with the frontend and database.
