@@ -1,265 +1,87 @@
-# PetConnect  
-[![Website](https://img.shields.io/badge/Customer_Site-Live-brightgreen)](https://youtu.be/U_MHaU1u62k)
-[![Admin](https://img.shields.io/badge/Staff_Portal-Live-blue)](https://github.com/TanyaDThomas/PetConnect)
+# PetConnect - Animal Shelter Management System
+
+[![Customer Site](https://img.shields.io/badge/Customer_Site-Live-brightgreen)](https://youtu.be/U_MHaU1u62k)
+[![Staff Portal](https://img.shields.io/badge/Staff_Portal-Repo-blue)](https://github.com/TanyaDThomas/PetConnect)
 [![Azure](https://img.shields.io/badge/Hosted_on-Azure-0078D4)](https://azure.microsoft.com)
 
-PetConnect is a multi-location animal shelter management application built with ASP.NET Core MVC using a layered, service-based architecture inspired by Clean Architecture principles. Currently deployed on Azure along with the frontend and database.
+Full-stack ASP.NET Core MVC platform for multi-location animal shelters. Features role-based authorization (Admin, Manager, Staff), Clean Architecture, EF Core, and comprehensive shelter operations.
 
-The application manages shelters, animals, adopters, adoptions, payments, staff, and administrative workflows while enforcing role-based access control across multiple shelter locations.
+**Demo Video** (Frontend)  
+[![Portfolio Walkthrough](https://img.youtube.com/vi/U_MHaU1u62k/0.jpg)](https://youtu.be/U_MHaU1u62k)
 
-To see customer website github that consumes animal api, please go see : [Pet Connect Frontend Customer website Github](https://github.com/TanyaDThomas/PetConnectFrontend.git)
+Was hosted on Azure Free Tier . which includes:
+  - Automatic idle timeout after ~20 minutes of inactivity
+  - Database auto-pause after ~1 hour
+    
+---
+
+## Key Features
+- Role-based access control across Admin, Manager, and Staff roles
+- Multi-tenant support for multiple shelter locations
+- Full CRUD operations for animals, adopters, adoptions, and payments
+- Dashboard with analytics and reporting
+- Notes system attached to records
+- Responsive UI with Bootstrap
 
 ---
 
-## Project Overview
-
-PetConnect was designed to simulate real-world shelter operations through a structured web application that emphasizes:
-
-- Separation of concerns
-- Maintainable backend architecture
-- Role-based authorization
-- Multi-location data management
-- Scalable CRUD operations
-- Dashboard reporting and analytics
-
-The system supports multiple shelters across different locations, each with its own staff, managers, animals, adopters, payments, and adoption records.
+## Frontend Integration
+This backend connects to the [PetConnect Frontend API](https://github.com/TanyaDThomas/PetConnectFrontend) using HttpClient.
 
 ---
 
-## Live Demos
-The application is hosted on Azure's **Free tier**, which includes:
-- Automatic idle timeout after ~20 minutes of inactivity
-- Database auto-pause after ~1 hour
-
-**To see a live demo:** Please reach out to me and I'll wake the site up for you. Once active, everything runs smoothly.
-
-**[View Demo Site](
-https://petconnectfrontend-b8dyfah2bef7fpcp.centralus-01.azurewebsites.net)**
-
-**[Staff Portal](
-https://petconnectclientportal-cdapepedgdbwd0ad.centralus-01.azurewebsites.net)**
-> Demo credentials available upon request
+## Role Permissions
+| Feature              | Staff | Manager | Admin |
+|----------------------|-------|---------|-------|
+| Manage Animals       | Yes   | Yes     | Yes   |
+| Manage Adoptions     | Yes   | Yes     | Yes   |
+| Manage Payments      | Yes   | Yes     | Yes   |
+| Manage Staff         | No    | Yes     | Yes   |
+| Manage Shelters      | No    | No      | Yes   |
 
 ---
 
-## Screenshots
-
-### Dashboard
-![Dashboard](images/dashboard.png)
-
-### Animal Management
+## Screenshots & GIFs
 ![Animal Management](https://github.com/TanyaDThomas/PetConnect/blob/main/images/staff.gif?raw=true)
-
-![Animal Management](images/animals.png)
-
-### Adoption Workflow
-![Adoption](https://github.com/TanyaDThomas/PetConnect/blob/main/images/adoption.gif?raw=true)
-
-![Adoption Workflow](images/adoptions.png)
-
-### Admin Management
-![Admin](https://github.com/TanyaDThomas/PetConnect/blob/main/images/admin.gif?raw=true)
-
+![Adoption Workflow](https://github.com/TanyaDThomas/PetConnect/blob/main/images/adoption.gif?raw=true)
+![Admin View](https://github.com/TanyaDThomas/PetConnect/blob/main/images/admin.gif?raw=true)
+![Dashboard](images/dashboard.png)
 ![Admin Management](images/admin.png)
-
-### Swagger 
 ![Swagger Animal Api](images/Swagger.png)
 
 ---
 
-## Features
-
-### Authentication & Authorization
-
-- ASP.NET Core Identity authentication
-- Role-based access control (RBAC)
-- Protected routes and restricted operations
-- Shelter-scoped data access
-
-### Role Permissions
-
-#### Staff
-- Manage animals
-- Manage adopters
-- Manage adoptions
-- Manage payments
-- Create and view notes
-- View shelters assigned to their location
-
-#### Manager
-Includes all Staff permissions plus:
-- Create staff accounts
-- Update staff information
-- Deactivate staff accounts
-
-#### Admin
-Full system access including:
-- Manage all shelters
-- Manage all users and staff
-- Manage animal types and attributes
-- Global reporting and dashboard access
-- Access to all shelter data
-
----
-
-## Permission Overview
-
-| Feature | Staff | Manager | Admin |
-|---|---|---|---|
-| Manage Animals | Yes | Yes | Yes |
-| Manage Adopters | Yes | Yes | Yes |
-| Manage Payments | Yes | Yes | Yes |
-| Manage Staff | No | Yes | Yes |
-| Manage Shelters | No | No | Yes |
-| Manage Animal Types | No | No | Yes |
-
----
-
-## Core Functionality
-
-### Animal Management
-- Create, update, and deactivate animals
-- Track adoption status
-- Assign animal types and attributes
-- Store shelter-specific records
-- Upload and manage profile and gallery images per animal
-- Set a primary profile image 
-
-### Adoption Workflow
-- Manage adoption lifecycle
-- Link adopters to animals
-- Track adoption status and shelter-related payments
-- Maintain operational notes attached to records
-
-### Shelter Management
-- Multi-location shelter support
-- Shelter-specific data isolation
-- Staff assignment by shelter
-
-### Payment Tracking
-- Track adoption-related payments
-- Support shelter-scoped payment visibility
-- Separate donation records from shelter operational payments
-
-### Notes System
-
-Users can create and manage notes attached to operational records including:
-
-- Animals
-- Adopters
-- Adoptions
-- Payments
-
-This allows shelter staff to maintain contextual records and workflow-related updates tied to specific entities.
-
-### Dashboard & Reporting
-Role-specific dashboards displaying:
-- Animal totals
-- Adoption statistics
-- Pending adoptions
-- Revenue tracking
-- Animal trend charts
-- Animal type distribution charts
-
-### Search & Filtering
-Search and filtering functionality implemented for:
-- Animals
-- Adopters
-- Adoptions
-
----
-
 ## Architecture
+Layered architecture inspired by Clean Architecture:
+- **Presentation**: MVC Controllers & Razor Views
+- **Application**: Services & Business Logic
+- **Domain**: Entities & Interfaces
+- **Infrastructure**: EF Core & SQL Server
 
-The application follows a layered architecture inspired by Clean Architecture concepts.
-
-### Project Structure
-
-#### Presentation Layer
-- ASP.NET Core MVC Controllers
-- Razor Views
-- ViewModels
-
-#### Application Layer
-- Query services (read operations)
-- Command services (write operations)
-- Business logic
-
-#### Domain Layer
-- Core entities
-- Interfaces and contracts
-
-#### Infrastructure Layer
-- Entity Framework Core
-- SQL Server persistence
-- Data access implementation
+**Customer Portal**: Separate Razor Pages frontend → [PetConnectFrontend](https://github.com/TanyaDThomas/PetConnectFrontend)
 
 ---
 
-## Technology Stack
-
-- ASP.NET Core MVC
-- C#
+## Technologies
+- ASP.NET Core MVC & Web API
 - Entity Framework Core
 - SQL Server
-- ASP.NET Core Web API (Animal Listing API)
-- ASP.NET Core Identity 
-- LINQ
+- ASP.NET Identity (RBAC)
 - Bootstrap 5
-- Razor Views
 - Swagger (OpenAPI)
 
-
 ---
 
-## Testing
+## Author
+Built by Tanya Thomas as a portfolio project showcasing backend architecture and real-world workflow management.
 
-Manual QA testing was performed for:
+[Main GitHub Profile](https://github.com/TanyaDThomas)
 
-- Authentication workflows
-- Authorization and protected routes
-- CRUD operations
-- Validation handling
-- Edge cases
-- Role permissions
 
-See `TESTING.md` for detailed test cases and known issues.
 
----
 
-## Known Limitations
 
-Current known issues and planned improvements:
 
-- Pagination not yet implemented for API or UI
-- Limited automated testing coverage
-- Image storage currently file-based (not cloud hosted yet)
-- Dynamic attribute filtering not yet exposed in API
 
----
-
-## Learning Goals Demonstrated
-
-This project demonstrates practical experience with:
-
-- ASP.NET Core MVC development
-- ASP.NET Core Web API design
-- Entity Framework Core
-- DTO-based API architecture
-- Authentication & authorization
-- Role-based access control
-- Service-layer architecture
-- Clean separation of concerns
-- Relational database design
-- REST API development with Swagger
-- Dashboard and reporting systems
-- Manual QA testing practices
-- File upload and media management systems
-
----
-
-## About
-
-Developed by Tanya Thomas as a portfolio project focused on backend architecture, scalable application structure, and real-world workflow management using ASP.NET Core technologies.
 
 
