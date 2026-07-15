@@ -6,8 +6,8 @@
 
 Full-stack ASP.NET Core MVC platform for multi-location animal shelters. Features role-based authorization (Admin, Manager, Staff), Clean Architecture, EF Core, and comprehensive shelter operations.
 
-**Demo Video** (Frontend)  
-[![Portfolio Walkthrough](https://img.youtube.com/vi/U_MHaU1u62k/0.jpg)](https://youtu.be/U_MHaU1u62k)
+**Demo Video - Click Below**  
+[![PetConnect Demo](https://img.youtube.com/vi/gXAyRN5UgeQ/0.jpg)](https://youtu.be/gXAyRN5UgeQ)
 
 Was hosted on Azure Free Tier . which includes:
   - Automatic idle timeout after ~20 minutes of inactivity
