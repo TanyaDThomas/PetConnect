@@ -9,9 +9,8 @@ Full-stack ASP.NET Core MVC platform for multi-location animal shelters. Feature
 **Demo Video - Click Below**  
 [![PetConnect Demo](https://img.youtube.com/vi/gXAyRN5UgeQ/0.jpg)](https://youtu.be/gXAyRN5UgeQ)
 
-Was hosted on Azure Free Tier . which includes:
-  - Automatic idle timeout after ~20 minutes of inactivity
-  - Database auto-pause after ~1 hour
+Was hosted on Azure Free Tier .
+
     
 ---
 
